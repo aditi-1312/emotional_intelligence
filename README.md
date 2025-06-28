@@ -2,6 +2,72 @@
 
 A comprehensive mood tracking and emotional intelligence application with a React frontend and Flask backend. This project provides advanced text emotion analysis, daily journaling, mood analytics, and personalized insights powered by AI.
 
+## 📁 Project Structure
+
+```
+emotional_intelligence/
+├── 📄 README.md                    # Main project documentation
+├── 📄 LICENSE                      # MIT License
+├── 📄 requirements.txt             # Python dependencies
+├── 📄 config.env.example           # Environment configuration template
+├── 📄 .gitignore                   # Git ignore patterns
+├── 📄 docker-compose.yml           # Docker configuration
+├── 📄 Dockerfile                   # Docker image definition
+│
+├── 🔧 Backend/
+│   ├── api.py                      # Flask REST API
+│   ├── models.py                   # ML models and emotion analysis
+│   ├── config.py                   # Configuration settings
+│   └── src/                        # Source code modules
+│       ├── __init__.py
+│       ├── data_processor.py       # Text processing
+│       ├── models.py               # ML models
+│       └── utils.py                # Utility functions
+│
+├── 🎨 Frontend/
+│   ├── package.json                # Node.js dependencies
+│   ├── public/                     # Static assets
+│   └── src/                        # React source code
+│       ├── components/             # React components
+│       │   ├── JournalEntry.tsx    # Journal entry component
+│       │   ├── Dashboard.tsx       # Analytics dashboard
+│       │   ├── Timeline.tsx        # Timeline view
+│       │   ├── MoodCalendar.tsx    # Calendar view
+│       │   └── Advice.tsx          # AI insights
+│       ├── services/               # API service layer
+│       └── App.tsx                 # Main application
+│
+├── 📚 Documentation/
+│   ├── DEPLOYMENT.md               # Deployment instructions
+│   ├── GITHUB_DEPLOYMENT.md        # GitHub deployment guide
+│   ├── CONTRIBUTING.md             # Contributing guidelines
+│   ├── CHANGELOG.md                # Version history
+│   ├── SETUP.md                    # Setup instructions
+│   ├── CHATGPT_SETUP.md            # ChatGPT integration guide
+│   └── ENHANCEMENT_SUMMARY.md      # Project enhancement summary
+│
+├── 🔧 Scripts/
+│   ├── deploy.sh                   # Deployment script
+│   ├── run_demo.py                 # Demo runner
+│   ├── test_system.py              # System testing
+│   └── system_status.py            # System status checker
+│
+├── 📊 Data & Models/
+│   ├── data/                       # Data storage
+│   ├── models/                     # Trained ML models
+│   └── output/                     # Generated outputs
+│
+├── 🧪 Examples/
+│   └── emotional_intellegence-1.ipynb  # Jupyter notebook example
+│
+├── 🧪 Tests/
+│   └── (Test files will be added here)
+│
+└── 🚀 CI/CD/
+    └── .github/workflows/          # GitHub Actions
+        └── deploy.yml              # CI/CD pipeline
+```
+
 ## ✨ Features
 
 ### 🎯 Core Capabilities
@@ -38,7 +104,7 @@ A comprehensive mood tracking and emotional intelligence application with a Reac
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/aditi-1312/emotional_intelligence.git
 cd emotional_intelligence
 
 # Install Python dependencies
@@ -50,52 +116,43 @@ npm install
 cd ..
 ```
 
-### 2. Start the Backend API
+### 2. Configuration
 
+```bash
+# Copy and edit environment configuration
+cp config.env.example config.env
+# Edit config.env with your API keys and settings
+```
+
+### 3. Start the Application
+
+#### Option A: Using the deployment script
+```bash
+# Setup and start development servers
+./scripts/deploy.sh setup
+./scripts/deploy.sh dev
+```
+
+#### Option B: Manual startup
 ```bash
 # Start the Flask API server
 PORT=5001 python3 api.py
-```
 
-The API will be available at `http://localhost:5001`
-
-### 3. Start the Frontend
-
-```bash
-# Start the React development server
+# In another terminal, start the React development server
 cd frontend
 npm start
 ```
 
-The web application will open at `http://localhost:3000`
+The web application will be available at `http://localhost:3000`
 
-### 4. Optional: Train Models
+## 📚 Documentation
 
-```bash
-# Train all models with sample data
-python train_models.py
-```
-
-## 📁 Project Structure
-
-```
-emotional_intelligence/
-├── api.py                 # Flask REST API backend
-├── config.py              # Configuration settings
-├── models.py              # ML models and emotion analysis
-├── requirements.txt       # Python dependencies
-├── README.md             # This file
-├── frontend/             # React frontend application
-│   ├── package.json      # Node.js dependencies
-│   ├── public/           # Static assets
-│   └── src/              # React source code
-│       ├── components/   # React components
-│       ├── services/     # API service layer
-│       └── App.tsx       # Main application
-├── data/                 # Data storage
-├── models/               # Trained ML models
-└── logs/                 # Application logs
-```
+- **[Setup Guide](docs/SETUP.md)** - Detailed setup instructions
+- **[Deployment Guide](docs/DEPLOYMENT.md)** - Production deployment
+- **[GitHub Deployment](docs/GITHUB_DEPLOYMENT.md)** - GitHub-specific deployment
+- **[Contributing Guidelines](docs/CONTRIBUTING.md)** - How to contribute
+- **[Changelog](docs/CHANGELOG.md)** - Version history and updates
+- **[ChatGPT Setup](docs/CHATGPT_SETUP.md)** - AI integration guide
 
 ## 🎮 Usage
 
@@ -236,7 +293,7 @@ docker-compose up --build
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our contributing guidelines:
+We welcome contributions! Please see our [Contributing Guidelines](docs/CONTRIBUTING.md) for details.
 
 1. Fork the repository
 2. Create a feature branch
@@ -246,7 +303,7 @@ We welcome contributions! Please see our contributing guidelines:
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
@@ -256,9 +313,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 📞 Support
 
-- **Issues**: Report bugs and request features on GitHub
-- **Documentation**: Comprehensive setup guides included
-- **Examples**: Sample usage in the codebase
+- **Issues**: Report bugs and request features on [GitHub Issues](https://github.com/aditi-1312/emotional_intelligence/issues)
+- **Documentation**: Comprehensive setup guides in the `/docs` folder
+- **Examples**: Sample usage in the `/examples` folder
 
 ## 🔮 Future Enhancements
 
