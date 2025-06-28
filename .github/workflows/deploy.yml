@@ -1,0 +1,107 @@
+name: Test and Deploy
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run backend tests
+      run: |
+        python -c "import sys; print('Python version:', sys.version)"
+        python -c "import flask; print('Flask version:', flask.__version__)"
+        python -c "import sklearn; print('Scikit-learn version:', sklearn.__version__)"
+    
+    - name: Test API endpoints
+      run: |
+        # Start API server in background
+        PORT=5001 python api.py &
+        sleep 10
+        
+        # Test health endpoint
+        curl -f http://localhost:5001/health || exit 1
+        
+        # Test analyze endpoint
+        curl -f -X POST http://localhost:5001/analyze \
+          -H "Content-Type: application/json" \
+          -d '{"text": "I am happy today"}' || exit 1
+
+  test-frontend:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+    
+    - name: Install frontend dependencies
+      run: |
+        cd frontend
+        npm ci
+    
+    - name: Run frontend tests
+      run: |
+        cd frontend
+        npm test -- --watchAll=false --passWithNoTests
+    
+    - name: Build frontend
+      run: |
+        cd frontend
+        npm run build
+
+  deploy-staging:
+    needs: [test-backend, test-frontend]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Deploy to staging
+      run: |
+        echo "Deploying to staging environment..."
+        # Add your staging deployment commands here
+
+  deploy-production:
+    needs: [test-backend, test-frontend]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Deploy to production
+      run: |
+        echo "Deploying to production environment..."
+        # Add your production deployment commands here 

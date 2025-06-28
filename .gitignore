@@ -192,3 +192,108 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# Environment variables and configuration
+config.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Log files
+logs/
+*.log
+
+# Model files (large binary files)
+models/*.pkl
+models/*.joblib
+models/*.h5
+models/*.pb
+
+# Data files (large datasets)
+data/*.csv
+data/*.json
+data/*.txt
+data/*.xlsx
+
+# Output files
+output/
+*.html
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.gif
+
+# Node.js (React frontend)
+frontend/node_modules/
+frontend/.pnp
+frontend/.pnp.js
+frontend/coverage/
+frontend/build/
+frontend/.DS_Store
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# React specific
+frontend/.next/
+frontend/out/
+frontend/.nuxt/
+frontend/dist/
+frontend/.cache/
+frontend/.parcel-cache/
+
+# Testing
+frontend/coverage/
+frontend/.nyc_output/
+
+# Production builds
+frontend/build/
+frontend/dist/
+
+# Misc
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# IDE specific
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Application specific
+instance/
+emotional_intelligence.db
+*.db-journal

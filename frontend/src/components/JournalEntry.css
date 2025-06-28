@@ -1,0 +1,151 @@
+.journal-container {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.journal-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.journal-header h2 {
+  color: #333;
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.journal-header p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.journal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+}
+
+.analysis-result {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border-left: 4px solid #667eea;
+}
+
+.analysis-result h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.emotion-card {
+  margin-bottom: 1.5rem;
+}
+
+.dominant-emotion {
+  display: inline-block;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  text-align: center;
+  color: white;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.dominant-emotion h4 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.dominant-emotion p {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.emotion-breakdown h4 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.emotion-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.emotion-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.emotion-label {
+  min-width: 80px;
+  font-weight: 600;
+  color: #333;
+  text-transform: capitalize;
+}
+
+.bar-container {
+  flex: 1;
+  height: 20px;
+  background: #e9ecef;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+
+.emotion-score {
+  min-width: 50px;
+  font-weight: 600;
+  color: #666;
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  .journal-container {
+    padding: 1.5rem;
+    margin: 0 1rem;
+  }
+  
+  .journal-header h2 {
+    font-size: 1.8rem;
+  }
+  
+  .emotion-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .emotion-label {
+    min-width: auto;
+  }
+  
+  .bar-container {
+    width: 100%;
+  }
+} 
