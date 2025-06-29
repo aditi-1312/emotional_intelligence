@@ -14,7 +14,7 @@ const Timeline: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => {
     
     try {
       const response = await apiService.getTimeline();
-      setTimeline(response.data.timeline);
+      setTimeline(response.data);
     } catch (err) {
       setError('Failed to load timeline. Please try again.');
       console.error('Error fetching timeline:', err);
@@ -35,6 +35,7 @@ const Timeline: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => {
       anger: '#FF6347',
       fear: '#8A2BE2',
       surprise: '#FFA500',
+      disgust: '#228B22',
       neutral: '#808080'
     };
     return colors[emotion] || '#808080';
@@ -42,24 +43,32 @@ const Timeline: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => {
 
   const getEmotionValue = (emotion: string) => {
     const values: Record<string, number> = {
-      joy: 6,
-      love: 5,
-      surprise: 4,
-      neutral: 3,
-      sadness: 2,
-      fear: 1,
-      anger: 0
+      joy: 7,
+      love: 6,
+      surprise: 5,
+      neutral: 4,
+      sadness: 3,
+      fear: 2,
+      anger: 1,
+      disgust: 0
     };
-    return values[emotion] || 3;
+    return values[emotion] || 4;
   };
 
-  const chartData = timeline.map(entry => ({
-    date: entry.date,
-    emotion: entry.emotion,
-    value: getEmotionValue(entry.emotion),
-    text: entry.text,
-    color: getEmotionColor(entry.emotion)
-  }));
+  const chartData = timeline
+    .map(entry => ({
+      date: new Date(entry.timestamp).toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric' 
+      }),
+      emotion: entry.dominant_emotion,
+      value: getEmotionValue(entry.dominant_emotion),
+      text: entry.text,
+      color: getEmotionColor(entry.dominant_emotion),
+      confidence: entry.confidence,
+      fullDate: entry.timestamp
+    }))
+    .sort((a, b) => new Date(a.fullDate).getTime() - new Date(b.fullDate).getTime()); // Sort by date ascending
 
   if (loading) {
     return (
@@ -95,15 +104,21 @@ const Timeline: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => {
             <h3>Mood Over Time</h3>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis 
+                  dataKey="date" 
+                  tick={{ fontSize: 12 }}
+                  axisLine={{ stroke: '#ccc' }}
+                />
                 <YAxis 
-                  domain={[0, 6]}
-                  ticks={[0, 1, 2, 3, 4, 5, 6]}
+                  domain={[0, 7]}
+                  ticks={[0, 1, 2, 3, 4, 5, 6, 7]}
                   tickFormatter={(value) => {
-                    const emotions = ['Anger', 'Fear', 'Sadness', 'Neutral', 'Surprise', 'Love', 'Joy'];
+                    const emotions = ['Disgust', 'Anger', 'Fear', 'Sadness', 'Neutral', 'Surprise', 'Love', 'Joy'];
                     return emotions[value] || '';
                   }}
+                  tick={{ fontSize: 11 }}
+                  axisLine={{ stroke: '#ccc' }}
                 />
                 <Tooltip 
                   content={({ active, payload, label }) => {
@@ -112,8 +127,11 @@ const Timeline: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => {
                       return (
                         <div className="custom-tooltip">
                           <p className="tooltip-date">{label}</p>
-                          <p className="tooltip-emotion" style={{ color: data.color }}>
+                          <p className="tooltip-emotion" style={{ color: data.color, fontWeight: 'bold' }}>
                             {data.emotion.toUpperCase()}
+                          </p>
+                          <p className="tooltip-confidence">
+                            Confidence: {(data.confidence * 100).toFixed(1)}%
                           </p>
                           <p className="tooltip-text">{data.text}</p>
                         </div>
@@ -125,10 +143,22 @@ const Timeline: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => {
                 <Line 
                   type="monotone" 
                   dataKey="value" 
-                  stroke="#8884d8" 
-                  strokeWidth={2}
-                  dot={{ fill: '#8884d8', strokeWidth: 2, r: 4 }}
-                  activeDot={{ r: 6 }}
+                  stroke="#667eea" 
+                  strokeWidth={3}
+                  dot={(props) => {
+                    const { cx, cy, payload } = props;
+                    return (
+                      <circle
+                        cx={cx}
+                        cy={cy}
+                        r={6}
+                        fill={payload.color}
+                        stroke="#fff"
+                        strokeWidth={2}
+                      />
+                    );
+                  }}
+                  activeDot={{ r: 8, stroke: '#fff', strokeWidth: 2 }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -143,9 +173,9 @@ const Timeline: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => {
                   <div className="entry-header">
                     <div 
                       className="emotion-indicator"
-                      style={{ backgroundColor: getEmotionColor(entry.emotion) }}
+                      style={{ backgroundColor: getEmotionColor(entry.dominant_emotion) }}
                     >
-                      {entry.emotion.toUpperCase()}
+                      {entry.dominant_emotion.toUpperCase()}
                     </div>
                     <span className="entry-date">
                       {entry.date}
@@ -166,7 +196,7 @@ const Timeline: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => {
           <div className="emotion-legend">
             <h3>Emotion Scale</h3>
             <div className="legend-items">
-              {['joy', 'love', 'surprise', 'neutral', 'sadness', 'fear', 'anger'].map(emotion => (
+              {['joy', 'love', 'surprise', 'neutral', 'sadness', 'fear', 'anger', 'disgust'].map(emotion => (
                 <div key={emotion} className="legend-item">
                   <div 
                     className="legend-color"

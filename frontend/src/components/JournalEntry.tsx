@@ -46,6 +46,7 @@ const JournalEntry: React.FC<JournalEntryProps> = ({ onEntryAdded }) => {
       anger: '#FF6347',
       fear: '#8A2BE2',
       surprise: '#FFA500',
+      disgust: '#228B22',
       neutral: '#808080'
     };
     return colors[emotion] || '#808080';

@@ -290,19 +290,104 @@
 }
 
 .support-message {
-  background: rgba(255, 255, 255, 0.8);
-  padding: 16px;
-  border-radius: 8px;
-  margin-top: 16px;
-  border-left: 3px solid #38a169;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 .support-message p {
   margin: 0;
-  color: #2d3748;
   font-weight: 500;
 }
 
+/* Suggestions Section */
+.suggestions-intro {
+  text-align: center;
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 30px;
+  font-style: italic;
+}
+
+.suggestions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+.suggestion-category {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e8e8e8;
+  transition: all 0.3s ease;
+}
+
+.suggestion-category:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.suggestion-category h3 {
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.suggestion-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.suggestion-item {
+  color: #555;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+  padding: 8px 0;
+  position: relative;
+  padding-left: 20px;
+}
+
+.suggestion-item::before {
+  content: '•';
+  color: #667eea;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+  top: 8px;
+}
+
+.suggestion-item:last-child {
+  margin-bottom: 0;
+}
+
+.suggestions-footer {
+  text-align: center;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+  box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+}
+
+.suggestions-footer p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .advice-container {
     padding: 15px;
@@ -326,5 +411,22 @@
   
   .self-care-tips {
     grid-template-columns: 1fr;
+  }
+  
+  .suggestions-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .suggestion-category {
+    padding: 20px;
+  }
+  
+  .suggestion-category h3 {
+    font-size: 16px;
+  }
+  
+  .suggestion-item {
+    font-size: 13px;
   }
 } 

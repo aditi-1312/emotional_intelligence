@@ -52,7 +52,7 @@ const MoodCalendar: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) 
   const fetchJournalEntries = async () => {
     setLoading(true);
     try {
-      const response = await apiService.getJournalEntries(100, 'user123');
+      const response = await apiService.getJournalEntries(100);
       setJournalEntries(response.data);
     } catch (err) {
       setError('Failed to fetch journal entries');
@@ -111,7 +111,7 @@ const MoodCalendar: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) 
         day,
         month,
         year,
-        mood: entry?.emotion || null,
+        mood: entry?.dominant_emotion || null,
         journalEntry: entry?.text || null,
         isCurrentMonth: true,
         isToday
@@ -175,7 +175,7 @@ const MoodCalendar: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) 
 
     const moodCounts: Record<string, number> = {};
     currentMonthEntries.forEach(entry => {
-      const emotion = entry.emotion;
+      const emotion = entry.dominant_emotion;
       moodCounts[emotion] = (moodCounts[emotion] || 0) + 1;
     });
 

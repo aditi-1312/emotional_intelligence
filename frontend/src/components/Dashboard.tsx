@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Link } from 'react-router-dom';
 import { apiService, AnalyticsSummary, JournalEntry } from '../services/api';
@@ -17,7 +17,7 @@ const Dashboard: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => 
   const [quote, setQuote] = useState<Quote | null>(null);
   const [quoteLoading, setQuoteLoading] = useState(true);
 
-  const fetchDailyQuote = async () => {
+  const fetchDailyQuote = useCallback(async () => {
     try {
       // Try multiple quote APIs for better reliability
       const apis = [
@@ -80,9 +80,9 @@ const Dashboard: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => 
     } finally {
       setQuoteLoading(false);
     }
-  };
+  }, [quote]);
 
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = useCallback(async () => {
     setLoading(true);
     setError('');
     
@@ -96,12 +96,13 @@ const Dashboard: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => 
         setCurrentMood(journalResponse.data[0]);
       }
     } catch (err) {
-      setError('Failed to load analytics. Please try again.');
-      console.error('Error fetching analytics:', err);
+      // Don't show error for empty data, just set summary to null
+      console.log('No analytics data available yet');
+      setSummary(null);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchAnalytics();
@@ -141,7 +142,27 @@ const Dashboard: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => 
   if (!summary) {
     return (
       <div className="dashboard-container">
-        <div className="no-data">Start journaling to see your mood insights!</div>
+        <div className="no-data">
+          <div className="no-data-content">
+            <h2>📝 Start Your Mood Journey!</h2>
+            <p>Add your first journal entry to see your emotional insights and patterns.</p>
+            <div className="no-data-features">
+              <div className="feature">
+                <span>📊</span>
+                <p>Track your emotions</p>
+              </div>
+              <div className="feature">
+                <span>📈</span>
+                <p>View mood trends</p>
+              </div>
+              <div className="feature">
+                <span>🧠</span>
+                <p>Get AI insights</p>
+              </div>
+            </div>
+            <p className="no-data-cta">Head to the Journal page to get started!</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -195,17 +216,17 @@ const Dashboard: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => 
           <h2>Current Mood</h2>
           <div className="mood-card">
             <div className="mood-emoji">
-              {currentMood.emotion === 'joy' && '😊'}
-              {currentMood.emotion === 'sadness' && '😢'}
-              {currentMood.emotion === 'anger' && '😠'}
-              {currentMood.emotion === 'fear' && '😨'}
-              {currentMood.emotion === 'surprise' && '😲'}
-              {currentMood.emotion === 'disgust' && '🤢'}
-              {currentMood.emotion === 'love' && '❤️'}
-              {currentMood.emotion === 'neutral' && '😐'}
+              {currentMood.dominant_emotion === 'joy' && '😊'}
+              {currentMood.dominant_emotion === 'sadness' && '😢'}
+              {currentMood.dominant_emotion === 'anger' && '😠'}
+              {currentMood.dominant_emotion === 'fear' && '😨'}
+              {currentMood.dominant_emotion === 'surprise' && '😲'}
+              {currentMood.dominant_emotion === 'disgust' && '🤢'}
+              {currentMood.dominant_emotion === 'love' && '❤️'}
+              {currentMood.dominant_emotion === 'neutral' && '😐'}
             </div>
             <div className="mood-details">
-              <h3>{currentMood.emotion.charAt(0).toUpperCase() + currentMood.emotion.slice(1)}</h3>
+              <h3>{currentMood.dominant_emotion.charAt(0).toUpperCase() + currentMood.dominant_emotion.slice(1)}</h3>
               <p className="confidence">Confidence: {(currentMood.confidence * 100).toFixed(1)}%</p>
               <p className="mood-text">"{currentMood.text}"</p>
             </div>
