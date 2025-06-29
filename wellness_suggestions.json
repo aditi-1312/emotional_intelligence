@@ -1,0 +1,84 @@
+{
+  "categories": [
+    {
+      "suggestions": [
+        "Start your day with 5-10 minutes of deep breathing or meditation",
+        "Write down 3 things you're grateful for",
+        "Take a few minutes to stretch and move your body",
+        "Eat a nourishing breakfast to fuel your day",
+        "Set one small, achievable goal for the day"
+      ],
+      "title": "🌅 Morning Wellness"
+    },
+    {
+      "suggestions": [
+        "Practice the 4-7-8 breathing technique: inhale 4, hold 7, exhale 8",
+        "Take regular breaks during work - try the Pomodoro technique",
+        "Go for a short walk in nature when feeling overwhelmed",
+        "Listen to calming music or nature sounds",
+        "Practice progressive muscle relaxation"
+      ],
+      "title": "💪 Stress Management"
+    },
+    {
+      "suggestions": [
+        "Create a consistent bedtime routine",
+        "Avoid screens 1 hour before bed",
+        "Keep your bedroom cool, dark, and quiet",
+        "Try reading a book or journaling before sleep",
+        "Avoid caffeine after 2 PM"
+      ],
+      "title": "😴 Sleep Hygiene"
+    },
+    {
+      "suggestions": [
+        "Reach out to a friend or family member today",
+        "Join a club or group that interests you",
+        "Practice active listening in conversations",
+        "Share your feelings with someone you trust",
+        "Plan a small gathering or coffee meetup"
+      ],
+      "title": "🤝 Social Connection"
+    },
+    {
+      "suggestions": [
+        "Learn something new - take an online course or read a book",
+        "Set aside time for hobbies you enjoy",
+        "Practice self-compassion and positive self-talk",
+        "Keep a gratitude journal",
+        "Try a new activity or skill"
+      ],
+      "title": "🎯 Personal Growth"
+    },
+    {
+      "suggestions": [
+        "Practice mindful eating - savor each bite",
+        "Take a mindful walk, noticing your surroundings",
+        "Try guided meditation apps",
+        "Practice yoga or gentle stretching",
+        "Spend time in nature without distractions"
+      ],
+      "title": "🧘‍♀️ Mindfulness & Relaxation"
+    },
+    {
+      "suggestions": [
+        "Find a form of exercise you enjoy",
+        "Take the stairs instead of the elevator",
+        "Dance to your favorite music",
+        "Try a new sport or physical activity",
+        "Take regular movement breaks throughout the day"
+      ],
+      "title": "🏃‍♀️ Physical Wellness"
+    },
+    {
+      "suggestions": [
+        "Write in a journal about your thoughts and feelings",
+        "Try drawing, painting, or coloring",
+        "Learn to play a musical instrument",
+        "Take photos of things that bring you joy",
+        "Write poetry or short stories"
+      ],
+      "title": "💡 Creative Expression"
+    }
+  ]
+}

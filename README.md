@@ -1,242 +1,167 @@
 # 🧠 Emotional Intelligence Mood Tracker
 
-A comprehensive mood tracking and emotional intelligence application with a React frontend and Flask backend. This project provides advanced text emotion analysis, daily journaling, mood analytics, and personalized insights powered by AI.
+A comprehensive web application for tracking emotional well-being using AI-powered emotion analysis and personalized insights.
 
-## 📁 Project Structure
+![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
+![React](https://img.shields.io/badge/React-18.0+-blue.svg)
+![TypeScript](https://img.shields.io/badge/TypeScript-4.0+-blue.svg)
+![Flask](https://img.shields.io/badge/Flask-2.0+-green.svg)
+![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-```
-emotional_intelligence/
-├── 📄 README.md                    # Main project documentation
-├── 📄 LICENSE                      # MIT License
-├── 📄 requirements.txt             # Python dependencies
-├── 📄 config.env.example           # Environment configuration template
-├── 📄 .gitignore                   # Git ignore patterns
-├── 📄 docker-compose.yml           # Docker configuration
-├── 📄 Dockerfile                   # Docker image definition
-│
-├── 🔧 Backend/
-│   ├── api.py                      # Flask REST API
-│   ├── models.py                   # ML models and emotion analysis
-│   ├── config.py                   # Configuration settings
-│   └── src/                        # Source code modules
-│       ├── __init__.py
-│       ├── data_processor.py       # Text processing
-│       ├── models.py               # ML models
-│       └── utils.py                # Utility functions
-│
-├── 🎨 Frontend/
-│   ├── package.json                # Node.js dependencies
-│   ├── public/                     # Static assets
-│   └── src/                        # React source code
-│       ├── components/             # React components
-│       │   ├── JournalEntry.tsx    # Journal entry component
-│       │   ├── Dashboard.tsx       # Analytics dashboard
-│       │   ├── Timeline.tsx        # Timeline view
-│       │   ├── MoodCalendar.tsx    # Calendar view
-│       │   └── Advice.tsx          # AI insights
-│       ├── services/               # API service layer
-│       └── App.tsx                 # Main application
-│
-├── 📚 Documentation/
-│   ├── DEPLOYMENT.md               # Deployment instructions
-│   ├── GITHUB_DEPLOYMENT.md        # GitHub deployment guide
-│   ├── CONTRIBUTING.md             # Contributing guidelines
-│   ├── CHANGELOG.md                # Version history
-│   ├── SETUP.md                    # Setup instructions
-│   ├── CHATGPT_SETUP.md            # ChatGPT integration guide
-│   └── ENHANCEMENT_SUMMARY.md      # Project enhancement summary
-│
-├── 🔧 Scripts/
-│   ├── deploy.sh                   # Deployment script
-│   ├── run_demo.py                 # Demo runner
-│   ├── test_system.py              # System testing
-│   └── system_status.py            # System status checker
-│
-├── 📊 Data & Models/
-│   ├── data/                       # Data storage
-│   ├── models/                     # Trained ML models
-│   └── output/                     # Generated outputs
-│
-├── 🧪 Examples/
-│   └── emotional_intellegence-1.ipynb  # Jupyter notebook example
-│
-├── 🧪 Tests/
-│   └── (Test files will be added here)
-│
-└── 🚀 CI/CD/
-    └── .github/workflows/          # GitHub Actions
-        └── deploy.yml              # CI/CD pipeline
-```
+## 🌟 Features
 
-## ✨ Features
+### 📝 **Journal Entry System**
+- Write daily mood entries with natural language
+- AI-powered emotion detection from text
+- Confidence scoring for emotion analysis
+- Timestamp tracking for emotional journey
 
-### 🎯 Core Capabilities
-- **Daily Mood Journaling**: Track your emotions through daily journal entries
-- **AI-Powered Emotion Analysis**: Advanced text emotion classification using machine learning
-- **Mood Analytics Dashboard**: Visualize your emotional patterns and trends
-- **Personalized Insights**: AI-generated advice based on your mood patterns
-- **Mood Calendar**: Calendar view of your daily moods with color coding
-- **Timeline Analysis**: Track your emotional journey over time
-- **Daily Quotes**: Motivational quotes that adapt to your mood
+### 📊 **Analytics Dashboard**
+- Visual representation of mood trends
+- Emotion distribution charts
+- Statistical analysis of emotional patterns
+- Real-time data aggregation
 
-### 🤖 Machine Learning Models
-- **Multi-Model Ensemble**: Support for 7+ machine learning models
-- **Advanced Text Processing**: Lemmatization, stemming, custom stop words
-- **Real-time Analysis**: Instant emotion detection and sentiment analysis
-- **Context-Aware Detection**: Improved accuracy for positive vs negative emotions
+### 📈 **Timeline View**
+- Chronological view of emotional journey
+- Filter and search through entries
+- Visual timeline with emotion indicators
+- Historical mood tracking
 
-### 📊 Analytics & Visualization
-- **Mood Distribution Charts**: Interactive pie charts and bar plots
-- **Emotion Timeline**: Track emotions over time with detailed entries
-- **Monthly Mood Statistics**: Comprehensive mood analytics
-- **Personalized Insights**: AI-powered recommendations and advice
-- **Mood Calendar**: Visual calendar with color-coded daily moods
+### 📅 **Mood Calendar**
+- Calendar-based mood tracking
+- Monthly and weekly views
+- Color-coded emotion indicators
+- Quick entry creation
 
-### 🌐 Web Interfaces
-- **React Frontend**: Modern, responsive web application
-- **Flask REST API**: Production-ready API endpoints
-- **Real-time Updates**: Live dashboard updates
-- **Mobile-Friendly Design**: Responsive design for all devices
+### 🤖 **AI Insights**
+- OpenAI GPT-3.5 powered insights
+- Personalized emotional intelligence advice
+- Context-aware suggestions
+- Rule-based fallback system
+
+### 🔐 **Secure Authentication**
+- Google OAuth 2.0 integration
+- Secure user session management
+- Data isolation per user
+- Demo login for testing
+
+### 🗂️ **Data Management**
+- Refresh/clear functionality
+- Export capabilities
+- Data backup and restore
+- User data privacy controls
+
+## 🛠️ Technology Stack
+
+### **Backend**
+- **Python Flask** - Web framework
+- **SQLite** - Database
+- **Flask-Login** - Authentication
+- **OAuthlib** - Google OAuth integration
+- **OpenAI API** - AI insights
+- **Pandas/NumPy** - Data processing
+
+### **Frontend**
+- **React 18** - UI framework
+- **TypeScript** - Type safety
+- **Axios** - HTTP client
+- **React Router** - Navigation
+- **CSS3** - Styling
+
+### **DevOps**
+- **Docker** - Containerization
+- **Git** - Version control
+- **Python venv** - Environment management
+- **npm** - Package management
 
 ## 🚀 Quick Start
 
-### 1. Installation
+### Prerequisites
+- Python 3.8+
+- Node.js 16+
+- npm or yarn
+- Google OAuth credentials
 
+### 1. Clone the Repository
 ```bash
-# Clone the repository
-git clone https://github.com/aditi-1312/emotional_intelligence.git
-cd emotional_intelligence
+git clone https://github.com/yourusername/emotional-intelligence-mood-tracker.git
+cd emotional-intelligence-mood-tracker
+```
 
-# Install Python dependencies
+### 2. Backend Setup
+```bash
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
 
-# Install frontend dependencies
+# Set up environment variables
+cp config.env.example config.env
+# Edit config.env with your credentials
+```
+
+### 3. Frontend Setup
+```bash
 cd frontend
 npm install
-cd ..
 ```
 
-### 2. Configuration
+### 4. Configure Google OAuth
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select existing one
+3. Enable Google+ API
+4. Create OAuth 2.0 credentials
+5. Add authorized redirect URIs:
+   - `http://localhost:5001/auth/callback`
+6. Update `config.env` with your credentials
 
+### 5. Run the Application
 ```bash
-# Copy and edit environment configuration
-cp config.env.example config.env
-# Edit config.env with your API keys and settings
-```
+# Terminal 1: Start backend
+cd backend
+python api.py
 
-### 3. Start the Application
-
-#### Option A: Using the deployment script
-```bash
-# Setup and start development servers
-./scripts/deploy.sh setup
-./scripts/deploy.sh dev
-```
-
-#### Option B: Manual startup
-```bash
-# Start the Flask API server
-PORT=5001 python3 api.py
-
-# In another terminal, start the React development server
+# Terminal 2: Start frontend
 cd frontend
 npm start
 ```
 
-The web application will be available at `http://localhost:3000`
+### 6. Access the Application
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:5001
+- Health Check: http://localhost:5001/health
 
-## 📚 Documentation
+## 📁 Project Structure
 
-- **[Setup Guide](docs/SETUP.md)** - Detailed setup instructions
-- **[Deployment Guide](docs/DEPLOYMENT.md)** - Production deployment
-- **[GitHub Deployment](docs/GITHUB_DEPLOYMENT.md)** - GitHub-specific deployment
-- **[Contributing Guidelines](docs/CONTRIBUTING.md)** - How to contribute
-- **[Changelog](docs/CHANGELOG.md)** - Version history and updates
-- **[ChatGPT Setup](docs/CHATGPT_SETUP.md)** - AI integration guide
-
-## 🎮 Usage
-
-### Web Application Features
-
-1. **Journal Entry**: Write daily journal entries and get instant emotion analysis
-2. **Dashboard**: View mood analytics, current mood, and daily quotes
-3. **Timeline**: Browse your journal entries chronologically
-4. **Mood Calendar**: Visual calendar showing your daily moods
-5. **Advice**: Get personalized insights and AI-powered recommendations
-
-### API Endpoints
-
-#### Journal Management
-```bash
-# Create a new journal entry
-curl -X POST http://localhost:5001/journal \
-  -H "Content-Type: application/json" \
-  -d '{"text": "I am feeling really happy today!", "user_id": "user123"}'
-
-# Get journal entries
-curl http://localhost:5001/journal?user_id=user123&limit=10
 ```
-
-#### Analytics
-```bash
-# Get mood analytics summary
-curl http://localhost:5001/analytics/summary?user_id=user123
-
-# Get mood timeline
-curl http://localhost:5001/analytics/timeline?user_id=user123
+emotional-intelligence-mood-tracker/
+├── backend/                 # Flask backend
+│   ├── api.py              # Main Flask application
+│   ├── config.py           # Configuration management
+│   ├── models.py           # Database models
+│   └── src/
+│       ├── data_processor.py  # Text processing
+│       ├── models.py          # AI models
+│       └── utils.py           # Utility functions
+├── frontend/               # React frontend
+│   ├── src/
+│   │   ├── components/     # React components
+│   │   ├── services/       # API services
+│   │   └── App.tsx         # Main application
+│   ├── package.json
+│   └── tsconfig.json
+├── data_and_models/        # Data storage and ML models
+├── docs/                   # Documentation
+├── scripts/                # Utility scripts
+├── tests/                  # Test files
+├── config.env.example      # Environment template
+├── requirements.txt        # Python dependencies
+├── docker-compose.yml      # Docker configuration
+└── README.md              # This file
 ```
-
-#### AI Insights
-```bash
-# Get personalized AI insights
-curl -X POST http://localhost:5001/ai/insights \
-  -H "Content-Type: application/json" \
-  -d '{"user_id": "user123"}'
-```
-
-## 📊 Supported Emotions
-
-The system can detect and classify the following emotions:
-
-- **Joy** 😊: Happiness, excitement, delight
-- **Sadness** 😢: Depression, melancholy, sorrow
-- **Anger** 😠: Fury, irritation, rage
-- **Fear** 😨: Anxiety, terror, worry
-- **Surprise** 😲: Shock, amazement, astonishment
-- **Love** ❤️: Affection, adoration, passion
-- **Neutral** 😐: Balanced, indifferent, calm
-
-## 🎯 Features
-
-### Daily Journaling
-- **Emotion Detection**: Automatic emotion analysis of your journal entries
-- **Mood Tracking**: Track your daily emotional state
-- **Rich Text Support**: Support for detailed journal entries
-- **Instant Analysis**: Real-time emotion classification
-
-### Analytics Dashboard
-- **Mood Distribution**: Visual breakdown of your emotions
-- **Current Mood Display**: Shows your most recent emotional state
-- **Daily Quotes**: Motivational quotes that adapt to your mood
-- **Trend Analysis**: Track emotional patterns over time
-
-### Mood Calendar
-- **Visual Calendar**: Monthly view of your moods
-- **Color Coding**: Each emotion has a distinct color
-- **Day Details**: Click on any day to see journal entries
-- **Monthly Statistics**: Summary of your monthly emotional patterns
-
-### AI-Powered Insights
-- **Personalized Advice**: AI-generated recommendations based on your patterns
-- **Mood Analysis**: Deep insights into your emotional journey
-- **Professional Resources**: Mental health resources and tips
-- **ChatGPT Integration**: Advanced AI insights with fallback to rule-based advice
-
-### Timeline View
-- **Chronological View**: Browse all your journal entries
-- **Emotion Filtering**: Filter entries by emotion
-- **Search Functionality**: Find specific entries
-- **Detailed View**: Full journal entry display
 
 ## 🔧 Configuration
 
@@ -244,62 +169,98 @@ The system can detect and classify the following emotions:
 Create a `config.env` file with the following variables:
 
 ```env
-OPENAI_API_KEY=your_openai_api_key_here
-FLASK_SECRET_KEY=your_secret_key_here
+# Google OAuth
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+# Flask
+FLASK_SECRET_KEY=your_secret_key
+
+# OpenAI (Optional)
+OPENAI_API_KEY=your_openai_api_key
+
+# Database
 DATABASE_URL=sqlite:///instance/emotional_intelligence.db
+
+# CORS
+CORS_ORIGINS=http://localhost:3000
 ```
 
-### API Configuration
-The API is configured through `config.py`:
-- **Server Settings**: Port and host configuration
-- **Model Parameters**: ML model settings
-- **Database Settings**: SQLite database configuration
-- **CORS Settings**: Cross-origin resource sharing
+## 🧪 Testing
 
-## 🚀 Deployment
-
-### Local Development
+### Backend Tests
 ```bash
-# Backend
-PORT=5001 python3 api.py
+cd backend
+python -m pytest tests/
+```
 
-# Frontend
+### Frontend Tests
+```bash
 cd frontend
-npm start
+npm test
 ```
 
-### Production Deployment
+### API Testing
 ```bash
-# Build frontend for production
+# Test health endpoint
+curl http://localhost:5001/health
+
+# Test OAuth flow
+curl -I http://localhost:5001/auth/login
+```
+
+## 📊 API Endpoints
+
+### Authentication
+- `GET /auth/login` - Initiate Google OAuth
+- `GET /auth/callback` - OAuth callback handler
+- `GET /auth/user` - Get current user
+- `GET /auth/logout` - Logout user
+- `GET /auth/demo` - Demo login
+
+### Journal Entries
+- `POST /journal` - Add new journal entry
+- `GET /journal` - Get journal entries
+- `DELETE /journal/clear` - Clear all entries
+
+### Analytics
+- `GET /analytics/summary` - Get analytics summary
+- `GET /analytics/timeline` - Get timeline data
+
+### AI Insights
+- `POST /ai/insights` - Get AI-powered insights
+- `GET /suggestions` - Get wellness suggestions
+
+## 🐳 Docker Deployment
+
+### Using Docker Compose
+```bash
+docker-compose up -d
+```
+
+### Manual Docker Build
+```bash
+# Build backend
+docker build -t emotional-intelligence-backend .
+
+# Build frontend
 cd frontend
-npm run build
-
-# Deploy backend with Gunicorn
-gunicorn -w 4 -b 0.0.0.0:5001 api:app
+docker build -t emotional-intelligence-frontend .
 ```
-
-### Docker Deployment
-```bash
-# Build and run with Docker Compose
-docker-compose up --build
-```
-
-## 📈 Performance
-
-- **Emotion Detection Accuracy**: 85-90%
-- **Response Time**: <1 second per analysis
-- **Real-time Updates**: Instant dashboard refresh
-- **Scalable Architecture**: Ready for production deployment
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](docs/CONTRIBUTING.md) for details.
-
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+- Follow PEP 8 for Python code
+- Use TypeScript for frontend components
+- Write tests for new features
+- Update documentation as needed
 
 ## 📝 License
 
@@ -307,26 +268,28 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- **Dataset**: Emotion Dataset for Emotion Recognition Tasks (Kaggle)
-- **Libraries**: React, Flask, scikit-learn, NLTK, OpenAI
-- **Community**: Open source contributors and researchers
+- OpenAI for GPT-3.5 API
+- Google for OAuth 2.0
+- React and Flask communities
+- Contributors and testers
 
 ## 📞 Support
 
-- **Issues**: Report bugs and request features on [GitHub Issues](https://github.com/aditi-1312/emotional_intelligence/issues)
-- **Documentation**: Comprehensive setup guides in the `/docs` folder
-- **Examples**: Sample usage in the `/examples` folder
+- **Issues**: [GitHub Issues](https://github.com/yourusername/emotional-intelligence-mood-tracker/issues)
+- **Documentation**: [Wiki](https://github.com/yourusername/emotional-intelligence-mood-tracker/wiki)
+- **Email**: aditigarg1312@gmail.com
 
-## 🔮 Future Enhancements
+## 🗺️ Roadmap
 
-- **Multi-language Support**: Expand beyond English
-- **Voice Analysis**: Audio emotion detection
-- **Mobile App**: Native mobile application
-- **Social Features**: Share insights with friends
-- **Advanced Analytics**: Machine learning insights
-- **Integration**: Connect with other health apps
+- [ ] Mobile app development
+- [ ] Advanced analytics and ML
+- [ ] Social features and sharing
+- [ ] Export/import functionality
+- [ ] Multi-language support
+- [ ] Real-time notifications
+- [ ] Integration with health apps
 
 ---
 
-**Made with ❤️ for emotional intelligence and mental wellness**
+**Made with ❤️ for better emotional well-being**
 

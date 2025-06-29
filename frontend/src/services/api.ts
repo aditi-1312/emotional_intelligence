@@ -7,16 +7,16 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // Include cookies for authentication
 });
 
 export interface JournalEntry {
   id: number;
-  user_id: string;
   text: string;
-  emotion: string;
+  dominant_emotion: string;
   confidence: number;
   timestamp: string;
-  analysis: any;
+  analysis?: any;
 }
 
 export interface AnalyticsSummary {
@@ -25,18 +25,29 @@ export interface AnalyticsSummary {
   average_confidence: number;
   most_common_emotion: string;
   recent_emotion: string;
+  current_mood: string;
 }
 
 export interface TimelineEntry {
   id: number;
-  date: string;
-  emotion: string;
-  confidence: number;
   text: string;
+  dominant_emotion: string;
+  confidence: number;
+  timestamp: string;
+  date: string;
 }
 
 export interface AIInsights {
   insights: string;
+}
+
+export interface SuggestionCategory {
+  title: string;
+  suggestions: string[];
+}
+
+export interface Suggestions {
+  categories: SuggestionCategory[];
 }
 
 export const apiService = {
@@ -44,26 +55,37 @@ export const apiService = {
   health: () => api.get('/health'),
 
   // Journal entries
-  addJournalEntry: (text: string, user_id: string = 'user123') =>
-    api.post<JournalEntry>('/journal', { text, user_id }),
+  addJournalEntry: (text: string) =>
+    api.post<JournalEntry>('/journal', { text }),
 
-  getJournalEntries: (limit: number = 10, user_id: string = 'user123') =>
-    api.get<JournalEntry[]>(`/journal?limit=${limit}&user_id=${user_id}`),
+  getJournalEntries: (limit: number = 10) =>
+    api.get<JournalEntry[]>(`/journal?limit=${limit}`),
+
+  clearJournalEntries: () =>
+    api.delete<{message: string, deleted_count: number}>('/journal/clear'),
 
   // Analytics
-  getAnalyticsSummary: (user_id: string = 'user123') =>
-    api.get<AnalyticsSummary>(`/analytics/summary?user_id=${user_id}`),
+  getAnalyticsSummary: () =>
+    api.get<AnalyticsSummary>('/analytics/summary'),
 
-  getTimeline: (user_id: string = 'user123', limit: number = 20) =>
-    api.get<{ timeline: TimelineEntry[]; count: number }>(`/analytics/timeline?user_id=${user_id}&limit=${limit}`),
+  getTimeline: (limit: number = 30) =>
+    api.get<TimelineEntry[]>(`/analytics/timeline?limit=${limit}`),
 
   // AI Insights
-  getAIInsights: (data: AnalyticsSummary) =>
-    api.post<AIInsights>('/ai/insights', data),
+  getAIInsights: () =>
+    api.post<string>('/ai/insights', {}),
+
+  // Suggestions
+  getSuggestions: () =>
+    api.get<Suggestions>('/suggestions'),
 
   // Text analysis
   analyzeText: (text: string) =>
     api.post<any>('/analyze', { text }),
+
+  // Authentication
+  getCurrentUser: () => api.get('/auth/user'),
+  demoLogin: () => api.get('/auth/demo'),
 };
 
 export default apiService; 

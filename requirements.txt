@@ -20,7 +20,6 @@ google-auth-httplib2==0.1.1
 requests==2.31.0
 
 # Database
-sqlite3
 psycopg2-binary==2.9.7
 
 # Visualization and UI
@@ -35,7 +34,6 @@ werkzeug==2.3.6
 
 # Additional dependencies
 joblib>=1.1.0
-streamlit>=1.25.0
 wordcloud>=1.8.0
 transformers>=4.20.0
 torch>=1.12.0
