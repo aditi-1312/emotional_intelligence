@@ -2,11 +2,7 @@ import React, { useState } from 'react';
 import { apiService } from '../services/api';
 import './JournalEntry.css';
 
-interface JournalEntryProps {
-  onEntryAdded?: () => void;
-}
-
-const JournalEntry: React.FC<JournalEntryProps> = ({ onEntryAdded }) => {
+const JournalEntry: React.FC = () => {
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<any>(null);
@@ -22,14 +18,9 @@ const JournalEntry: React.FC<JournalEntryProps> = ({ onEntryAdded }) => {
 
     try {
       const response = await apiService.addJournalEntry(text);
-      setAnalysis(response.data.analysis);
+      setAnalysis(response.analysis);
       setMessage('Journal entry saved successfully!');
       setText('');
-      
-      // Notify parent component
-      if (onEntryAdded) {
-        onEntryAdded();
-      }
     } catch (error) {
       setMessage('Error saving journal entry. Please try again.');
       console.error('Error:', error);

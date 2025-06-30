@@ -1,38 +1,72 @@
 .journal-container {
-  background: white;
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  max-width: 800px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 70vh;
+  padding: 48px 0 32px 0;
+  font-size: 15px;
+  background: none;
 }
 
-.journal-header {
-  text-align: center;
-  margin-bottom: 2rem;
+.journal-header, .journal-form {
+  width: 100%;
+  max-width: 600px;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.10);
+  padding: 32px 36px 28px 36px;
+  margin-bottom: 0;
+  margin-top: 0;
+  font-size: 15px;
+}
+
+@media (min-width: 900px) {
+  .journal-header, .journal-form {
+    max-width: 700px;
+    padding: 38px 48px 32px 48px;
+  }
+  .journal-container {
+    padding-top: 64px;
+  }
+}
+
+@media (max-width: 600px) {
+  .journal-header, .journal-form {
+    max-width: 98vw;
+    padding: 14px 4px 14px 4px;
+    border-radius: 14px;
+    font-size: 14px;
+  }
+  .journal-container {
+    padding: 18px 0 8px 0;
+  }
 }
 
 .journal-header h2 {
-  color: #333;
-  font-size: 2.2rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .journal-header p {
-  color: #666;
-  font-size: 1.1rem;
+  color: #555;
+  font-size: 1.05rem;
+  margin-bottom: 0;
 }
 
 .journal-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  margin-top: 0;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  margin-bottom: 18px;
 }
 
 .form-group label {
@@ -41,8 +75,71 @@
   font-size: 1rem;
 }
 
+label[for="journalText"] {
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.form-textarea {
+  font-size: 1.05rem;
+  padding: 14px 12px;
+  border-radius: 10px;
+  border: 1.5px solid #e0e7ef;
+  background: #f8fafc;
+  margin-bottom: 0.5rem;
+  min-height: 110px;
+  resize: vertical;
+  transition: border 0.2s;
+}
+.form-textarea:focus {
+  border: 1.5px solid #667eea;
+  outline: none;
+  background: #fff;
+}
+
+.submit-btn {
+  font-size: 1.08rem;
+  font-weight: 700;
+  padding: 13px 0;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  width: 100%;
+  margin-top: 10px;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.08);
+  transition: background 0.2s, box-shadow 0.2s;
+  letter-spacing: 0.01em;
+}
+.submit-btn:hover, .submit-btn:focus {
+  background: linear-gradient(90deg, #5a67d8 0%, #6c47b6 100%);
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.13);
+}
+
+.message {
+  margin-top: 18px;
+  font-size: 1rem;
+  padding: 10px 0;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.message.success {
+  background: #e6ffed;
+  color: #1a7f37;
+}
+
+.message.error {
+  background: #ffeaea;
+  color: #b23b3b;
+}
+
 .analysis-result {
-  margin-top: 2rem;
+  margin-top: 28px;
+  font-size: 1rem;
   padding: 1.5rem;
   background: #f8f9fa;
   border-radius: 12px;
@@ -56,17 +153,17 @@
 }
 
 .emotion-card {
-  margin-bottom: 1.5rem;
+  margin-bottom: 18px;
 }
 
 .dominant-emotion {
-  display: inline-block;
-  padding: 1rem 2rem;
-  border-radius: 12px;
-  text-align: center;
-  color: white;
+  padding: 12px 0;
+  border-radius: 10px;
+  color: #fff;
   font-weight: 700;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  font-size: 1.1rem;
+  text-align: center;
+  margin-bottom: 8px;
 }
 
 .dominant-emotion h4 {
@@ -77,6 +174,10 @@
 .dominant-emotion p {
   font-size: 0.9rem;
   opacity: 0.9;
+}
+
+.emotion-breakdown {
+  margin-top: 10px;
 }
 
 .emotion-breakdown h4 {
@@ -98,31 +199,32 @@
 }
 
 .emotion-label {
-  min-width: 80px;
+  font-size: 0.98rem;
   font-weight: 600;
   color: #333;
   text-transform: capitalize;
 }
 
 .bar-container {
-  flex: 1;
-  height: 20px;
-  background: #e9ecef;
-  border-radius: 10px;
-  overflow: hidden;
+  background: #e0e7ef;
+  border-radius: 6px;
+  height: 12px;
+  width: 120px;
+  margin: 0 8px;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .bar-fill {
-  height: 100%;
-  border-radius: 10px;
-  transition: width 0.5s ease;
+  height: 12px;
+  border-radius: 6px;
+  transition: width 0.3s;
 }
 
 .emotion-score {
-  min-width: 50px;
-  font-weight: 600;
-  color: #666;
-  text-align: right;
+  font-size: 0.95rem;
+  color: #555;
+  margin-left: 4px;
 }
 
 @media (max-width: 768px) {

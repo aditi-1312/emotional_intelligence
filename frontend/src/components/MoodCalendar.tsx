@@ -3,17 +3,11 @@ import { apiService, JournalEntry } from '../services/api';
 import './MoodCalendar.css';
 
 interface CalendarDay {
-  date: Date;
-  day: number;
-  month: number;
-  year: number;
-  mood: string | null;
-  journalEntry: string | null;
-  isCurrentMonth: boolean;
-  isToday: boolean;
+  date: Date | null;
+  journalEntry: JournalEntry | null;
 }
 
-const MoodCalendar: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => {
+const MoodCalendar: React.FC = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [calendarDays, setCalendarDays] = useState<CalendarDay[]>([]);
   const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([]);
@@ -37,14 +31,14 @@ const MoodCalendar: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) 
 
   const getEmotionEmoji = (emotion: string): string => {
     const emojis: Record<string, string> = {
-      joy: '😊',
+      joy: '😄',
       sadness: '😢',
       anger: '😠',
       fear: '😨',
       surprise: '😲',
       disgust: '🤢',
       love: '❤️',
-      neutral: '😐'
+      neutral: '🙂'
     };
     return emojis[emotion] || '📝';
   };
@@ -52,8 +46,8 @@ const MoodCalendar: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) 
   const fetchJournalEntries = async () => {
     setLoading(true);
     try {
-      const response = await apiService.getJournalEntries(100);
-      setJournalEntries(response.data);
+      const response = await apiService.getJournalEntries();
+      setJournalEntries(response.entries);
     } catch (err) {
       setError('Failed to fetch journal entries');
       console.error('Error fetching journal entries:', err);
@@ -62,87 +56,40 @@ const MoodCalendar: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) 
     }
   };
 
-  const generateCalendarDays = (date: Date, entries: JournalEntry[]): CalendarDay[] => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    
-    // Get first day of month and last day of month
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    
-    // Get the day of week for first day (0 = Sunday, 1 = Monday, etc.)
-    const firstDayOfWeek = firstDay.getDay();
-    
-    // Get the last day of previous month to fill the grid
-    const lastDayOfPrevMonth = new Date(year, month, 0);
-    
+  const generateCalendarDays = () => {
     const days: CalendarDay[] = [];
-    
-    // Add days from previous month to fill the first week
-    for (let i = firstDayOfWeek - 1; i >= 0; i--) {
-      const day = lastDayOfPrevMonth.getDate() - i;
-      const date = new Date(year, month - 1, day);
-      days.push({
-        date,
-        day,
-        month: month - 1,
-        year,
-        mood: null,
-        journalEntry: null,
-        isCurrentMonth: false,
-        isToday: false
-      });
+    const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+    const startDay = firstDayOfMonth.getDay();
+    const totalDays = lastDayOfMonth.getDate();
+    const entries = Array.isArray(journalEntries) ? journalEntries : [];
+
+    // Fill in days before the 1st of the month
+    for (let i = 0; i < startDay; i++) {
+      days.push({ date: null, journalEntry: null });
     }
-    
-    // Add days of current month
-    for (let day = 1; day <= lastDay.getDate(); day++) {
-      const date = new Date(year, month, day);
-      const today = new Date();
-      const isToday = date.toDateString() === today.toDateString();
-      
-      // Find journal entry for this date
+    // Fill in days of the month
+    for (let d = 1; d <= totalDays; d++) {
+      const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), d);
       const entry = entries.find(entry => {
         const entryDate = new Date(entry.timestamp);
-        return entryDate.toDateString() === date.toDateString();
+        return (
+          entryDate.getDate() === d &&
+          entryDate.getMonth() === currentDate.getMonth() &&
+          entryDate.getFullYear() === currentDate.getFullYear()
+        );
       });
-      
-      days.push({
-        date,
-        day,
-        month,
-        year,
-        mood: entry?.dominant_emotion || null,
-        journalEntry: entry?.text || null,
-        isCurrentMonth: true,
-        isToday
-      });
+      days.push({ date, journalEntry: entry || null });
     }
-    
-    // Add days from next month to fill the last week (if needed)
-    const remainingDays = 42 - days.length; // 6 rows * 7 days = 42
-    for (let day = 1; day <= remainingDays; day++) {
-      const date = new Date(year, month + 1, day);
-      days.push({
-        date,
-        day,
-        month: month + 1,
-        year,
-        mood: null,
-        journalEntry: null,
-        isCurrentMonth: false,
-        isToday: false
-      });
-    }
-    
     return days;
   };
 
   useEffect(() => {
     fetchJournalEntries();
-  }, [refreshTrigger]);
+  }, []);
 
   useEffect(() => {
-    setCalendarDays(generateCalendarDays(currentDate, journalEntries));
+    setCalendarDays(generateCalendarDays());
   }, [currentDate, journalEntries]);
 
   const goToPreviousMonth = () => {
@@ -167,6 +114,7 @@ const MoodCalendar: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) 
   };
 
   const getMoodStats = () => {
+    if (!Array.isArray(journalEntries)) return {};
     const currentMonthEntries = journalEntries.filter(entry => {
       const entryDate = new Date(entry.timestamp);
       return entryDate.getMonth() === currentDate.getMonth() && 
@@ -201,6 +149,34 @@ const MoodCalendar: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) 
   const moodStats = getMoodStats();
   const monthName = currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
+  // EMOTION MAP (for legend and summary)
+  const EMOTION_MAP = [
+    { name: 'Joy', color: '#ffe066', emoji: '😄' },
+    { name: 'Love', color: '#ff4d9d', emoji: '❤️' },
+    { name: 'Surprise', color: '#ffb3e6', emoji: '😲' },
+    { name: 'Neutral', color: '#888888', emoji: '🙂' },
+    { name: 'Sadness', color: '#4d90fe', emoji: '😢' },
+    { name: 'Fear', color: '#8d5524', emoji: '😨' },
+    { name: 'Anger', color: '#e63946', emoji: '😠' },
+    { name: 'Disgust', color: '#388e3c', emoji: '🤢' },
+  ];
+
+  // Helper: Get summary for this month
+  const getMonthlySummary = () => {
+    if (!Array.isArray(journalEntries)) return {};
+    const currentMonthEntries = journalEntries.filter(entry => {
+      const entryDate = new Date(entry.timestamp);
+      return entryDate.getMonth() === currentDate.getMonth() && 
+             entryDate.getFullYear() === currentDate.getFullYear();
+    });
+    const summary: Record<string, number> = {};
+    currentMonthEntries.forEach(entry => {
+      const emotion = (entry.dominant_emotion || '').toLowerCase();
+      summary[emotion] = (summary[emotion] || 0) + 1;
+    });
+    return summary;
+  };
+
   return (
     <div className="mood-calendar-container">
       <h1>📅 Mood Calendar</h1>
@@ -232,42 +208,123 @@ const MoodCalendar: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) 
         </div>
         
         <div className="calendar-days">
-          {calendarDays.map((day, index) => (
-            <div
-              key={index}
-              className={`calendar-day ${!day.isCurrentMonth ? 'other-month' : ''} ${day.isToday ? 'today' : ''} ${day.mood ? 'has-mood' : ''}`}
-              onClick={() => setSelectedDay(day)}
-              style={{
-                backgroundColor: day.mood ? getEmotionColor(day.mood) : 'transparent',
-                color: day.mood ? '#fff' : day.isCurrentMonth ? '#333' : '#ccc'
-              }}
-            >
-              <div className="day-number">{day.day}</div>
-              {day.mood && (
-                <div className="mood-emoji">
-                  {getEmotionEmoji(day.mood)}
-                </div>
-              )}
-            </div>
-          ))}
+          {calendarDays.map((day, index) => {
+            const mood = day.journalEntry?.dominant_emotion;
+            const isCurrentMonth = day.date && day.date.getMonth() === currentDate.getMonth() && day.date.getFullYear() === currentDate.getFullYear();
+            const isToday = day.date && (new Date()).toDateString() === day.date.toDateString();
+            const dayNumber = day.date?.getDate();
+            const entryText = day.journalEntry?.text || '';
+            return (
+              <div
+                key={index}
+                className={`calendar-day${!isCurrentMonth ? ' other-month' : ''}${isToday ? ' today' : ''}${mood ? ' has-mood' : ''}`}
+                onClick={() => day.date && setSelectedDay(day)}
+                style={{
+                  backgroundColor: mood ? getEmotionColor(mood) : '#f4f6f8',
+                  color: mood ? '#fff' : isCurrentMonth ? '#222' : '#bbb',
+                  border: isToday ? '2px solid #ffd700' : undefined,
+                  cursor: day.date ? 'pointer' : 'default',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: 56,
+                  minWidth: 56,
+                  aspectRatio: '1 / 1',
+                  borderRadius: 12,
+                  boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
+                  padding: 0,
+                  overflow: 'hidden',
+                }}
+              >
+                <div className="day-number" style={{ fontWeight: 700, fontSize: 18, marginBottom: 2 }}>{dayNumber}</div>
+                {mood && (
+                  <>
+                    <div className="mood-emoji" style={{ fontSize: 28, margin: '2px 0 2px 0' }}>{getEmotionEmoji(mood)}</div>
+                    <div
+                      className="calendar-entry-text"
+                      style={{
+                        fontSize: 12,
+                        fontWeight: 400,
+                        textAlign: 'center',
+                        marginTop: 2,
+                        maxWidth: '90%',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        whiteSpace: 'normal',
+                        lineHeight: '1.2',
+                        color: '#fff',
+                      }}
+                    >
+                      {entryText}
+                    </div>
+                  </>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 
       {selectedDay && (
         <div className="day-details">
-          <h3>{formatDate(selectedDay.date)}</h3>
-          {selectedDay.mood ? (
+          <h3>{selectedDay.date ? formatDate(selectedDay.date) : ''}</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+            <button
+              onClick={() => {
+                const idx = calendarDays.findIndex(day => day.date && selectedDay.date && day.date.getTime() === selectedDay.date.getTime());
+                for (let i = idx - 1; i >= 0; i--) {
+                  if (calendarDays[i].journalEntry) {
+                    setSelectedDay(calendarDays[i]);
+                    break;
+                  }
+                }
+              }}
+              disabled={(() => {
+                const idx = calendarDays.findIndex(day => day.date && selectedDay.date && day.date.getTime() === selectedDay.date.getTime());
+                return idx === calendarDays.findIndex(day => day.journalEntry);
+              })()}
+              className="nav-button"
+              style={{ marginRight: 12 }}
+            >
+              ← Previous Day
+            </button>
+            <button
+              onClick={() => {
+                const idx = calendarDays.findIndex(day => day.date && selectedDay.date && day.date.getTime() === selectedDay.date.getTime());
+                for (let i = idx + 1; i < calendarDays.length; i++) {
+                  if (calendarDays[i].journalEntry) {
+                    setSelectedDay(calendarDays[i]);
+                    break;
+                  }
+                }
+              }}
+              disabled={(() => {
+                const idx = calendarDays.findIndex(day => day.date && selectedDay.date && day.date.getTime() === selectedDay.date.getTime());
+                const lastIdx = calendarDays.map((d, i) => d.journalEntry ? i : -1).filter(i => i !== -1).slice(-1)[0];
+                return idx === lastIdx;
+              })()}
+              className="nav-button"
+              style={{ marginLeft: 12 }}
+            >
+              Next Day →
+            </button>
+          </div>
+          {selectedDay.journalEntry?.dominant_emotion ? (
             <div className="mood-info">
               <div className="mood-display">
-                <span className="mood-emoji-large">{getEmotionEmoji(selectedDay.mood)}</span>
-                <span className="mood-text">{selectedDay.mood.charAt(0).toUpperCase() + selectedDay.mood.slice(1)}</span>
+                <span className="mood-emoji-large">{getEmotionEmoji(selectedDay.journalEntry.dominant_emotion)}</span>
+                <span className="mood-text">{selectedDay.journalEntry.dominant_emotion.charAt(0).toUpperCase() + selectedDay.journalEntry.dominant_emotion.slice(1)}</span>
               </div>
               {selectedDay.journalEntry && (
                 <div className="journal-preview">
                   <h4>Journal Entry:</h4>
-                  <p>{selectedDay.journalEntry.length > 150 
-                    ? selectedDay.journalEntry.substring(0, 150) + '...' 
-                    : selectedDay.journalEntry}</p>
+                  <p>{selectedDay.journalEntry.text.length > 150 
+                    ? selectedDay.journalEntry.text.substring(0, 150) + '...' 
+                    : selectedDay.journalEntry.text}</p>
                 </div>
               )}
             </div>
@@ -282,46 +339,88 @@ const MoodCalendar: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) 
         </div>
       )}
 
-      <div className="mood-legend">
-        <h3>Mood Legend</h3>
-        <div className="legend-items">
-          {Object.entries({
-            joy: '😊 Joy',
-            love: '❤️ Love', 
-            surprise: '😲 Surprise',
-            neutral: '😐 Neutral',
-            sadness: '😢 Sadness',
-            fear: '😨 Fear',
-            anger: '😠 Anger',
-            disgust: '🤢 Disgust'
-          }).map(([emotion, label]) => (
-            <div key={emotion} className="legend-item">
-              <div 
-                className="legend-color" 
-                style={{ backgroundColor: getEmotionColor(emotion) }}
-              ></div>
-              <span>{label}</span>
+      {/* Mood Legend */}
+      <div style={{
+        background: '#fff',
+        borderRadius: 18,
+        boxShadow: '0 4px 24px rgba(0,0,0,0.07)',
+        maxWidth: 1100,
+        margin: '32px auto 0 auto',
+        padding: '32px 32px 18px 32px',
+        border: '1px solid #f0f0f0',
+      }}>
+        <h2 style={{ fontWeight: 700, fontSize: 32, marginBottom: 24, color: '#2d3748' }}>Mood Legend</h2>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32 }}>
+          {EMOTION_MAP.map(e => (
+            <div key={e.name} style={{ display: 'flex', alignItems: 'center', minWidth: 180, marginBottom: 16 }}>
+              <span style={{
+                display: 'inline-block',
+                width: 32,
+                height: 32,
+                borderRadius: 8,
+                background: e.color,
+                marginRight: 12,
+                border: '2px solid #f0f0f0',
+                textAlign: 'center',
+                fontSize: 22,
+                lineHeight: '32px',
+              }}>{e.emoji}</span>
+              <span style={{ fontWeight: 600, fontSize: 20, color: '#222' }}>{e.name}</span>
             </div>
           ))}
         </div>
       </div>
 
-      {Object.keys(moodStats).length > 0 && (
-        <div className="monthly-stats">
-          <h3>This Month's Mood Summary</h3>
-          <div className="stats-grid">
-            {Object.entries(moodStats).map(([emotion, count]) => (
-              <div key={emotion} className="stat-item">
-                <div className="stat-emoji">{getEmotionEmoji(emotion)}</div>
-                <div className="stat-details">
-                  <div className="stat-emotion">{emotion.charAt(0).toUpperCase() + emotion.slice(1)}</div>
-                  <div className="stat-count">{count} {count === 1 ? 'day' : 'days'}</div>
-                </div>
+      {/* Mood Summary */}
+      <div style={{
+        background: '#fff',
+        borderRadius: 18,
+        boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
+        maxWidth: 1200,
+        margin: '32px auto 0 auto',
+        padding: '32px 32px 18px 32px',
+        border: '1px solid #f0f0f0',
+      }}>
+        <h2 style={{ fontWeight: 700, fontSize: 32, marginBottom: 24, color: '#2d3748' }}>This Month's Mood Summary</h2>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            gap: '28px 32px',
+            width: '100%',
+            margin: '0 auto',
+          }}
+        >
+          {EMOTION_MAP.map(e => {
+            const count = getMonthlySummary()[e.name.toLowerCase()] || 0;
+            return (
+              <div
+                key={e.name}
+                style={{
+                  background: '#fff',
+                  borderRadius: 14,
+                  minWidth: 180,
+                  maxWidth: 260,
+                  padding: '18px 24px',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+                  borderLeft: `4px solid ${e.color}`,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
+                  justifyContent: 'center',
+                }}
+              >
+                <span style={{ fontSize: 28, marginBottom: 6, color: '#222', fontWeight: 700 }}>
+                  {e.emoji} <span style={{ fontWeight: 700, fontSize: 22, color: '#222', marginLeft: 8 }}>{e.name}</span>
+                </span>
+                <span style={{ fontSize: 18, color: count === 0 ? '#888' : '#444', marginLeft: 4, fontWeight: 500 }}>
+                  {count} {count === 1 ? 'day' : 'days'}
+                </span>
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
-      )}
+      </div>
     </div>
   );
 };

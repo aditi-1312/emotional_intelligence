@@ -1,0 +1,232 @@
+[
+  {
+    "id": 1,
+    "text": "Today I feel grateful and happy!",
+    "user_id": "default",
+    "timestamp": "2025-06-25T11:33:55.158781",
+    "dominant_emotion": "joy",
+    "confidence": 0.85,
+    "emotions": {
+      "joy": 0.85,
+      "love": 0.1,
+      "neutral": 0.05
+    },
+    "sentiment_score": 0.8,
+    "processed_text": "Today I feel grateful and happy!",
+    "ensemble": true,
+    "model_agreement": 0.75,
+    "models_used": [
+      "linear_svc",
+      "logistic_regression",
+      "gradient_boosting"
+    ]
+  },
+  {
+    "id": 2,
+    "text": "I had a challenging day at work today.",
+    "user_id": "default",
+    "timestamp": "2025-06-26T11:33:55.158802",
+    "dominant_emotion": "sadness",
+    "confidence": 0.7,
+    "emotions": {
+      "sadness": 0.7,
+      "fear": 0.2,
+      "neutral": 0.1
+    },
+    "sentiment_score": -0.3,
+    "processed_text": "I had a challenging day at work today.",
+    "ensemble": true,
+    "model_agreement": 0.6,
+    "models_used": [
+      "linear_svc",
+      "logistic_regression",
+      "gradient_boosting"
+    ]
+  },
+  {
+    "id": 3,
+    "text": "I love spending time with my family!",
+    "user_id": "default",
+    "timestamp": "2025-06-27T11:33:55.158837",
+    "dominant_emotion": "love",
+    "confidence": 0.9,
+    "emotions": {
+      "love": 0.9,
+      "joy": 0.08,
+      "neutral": 0.02
+    },
+    "sentiment_score": 0.9,
+    "processed_text": "I love spending time with my family!",
+    "ensemble": true,
+    "model_agreement": 0.85,
+    "models_used": [
+      "linear_svc",
+      "logistic_regression",
+      "gradient_boosting"
+    ]
+  },
+  {
+    "id": 4,
+    "text": "I am feeling anxious about the upcoming presentation.",
+    "user_id": "default",
+    "timestamp": "2025-06-28T11:33:55.158842",
+    "dominant_emotion": "fear",
+    "confidence": 0.75,
+    "emotions": {
+      "fear": 0.75,
+      "sadness": 0.15,
+      "neutral": 0.1
+    },
+    "sentiment_score": -0.4,
+    "processed_text": "I am feeling anxious about the upcoming presentation.",
+    "ensemble": true,
+    "model_agreement": 0.7,
+    "models_used": [
+      "linear_svc",
+      "logistic_regression",
+      "gradient_boosting"
+    ]
+  },
+  {
+    "id": 5,
+    "text": "I am so excited about my vacation next week!",
+    "user_id": "default",
+    "timestamp": "2025-06-29T11:33:55.158845",
+    "dominant_emotion": "joy",
+    "confidence": 0.95,
+    "emotions": {
+      "joy": 0.95,
+      "love": 0.03,
+      "surprise": 0.02
+    },
+    "sentiment_score": 0.9,
+    "processed_text": "I am so excited about my vacation next week!",
+    "ensemble": true,
+    "model_agreement": 0.9,
+    "models_used": [
+      "linear_svc",
+      "logistic_regression",
+      "gradient_boosting"
+    ]
+  },
+  {
+    "id": 6,
+    "text": "loaded with work..cant find time for myself no peace",
+    "user_id": "default",
+    "timestamp": "2025-06-30T11:40:13.220261",
+    "dominant_emotion": "joy",
+    "confidence": 0.65,
+    "emotions": {
+      "anger": 0.0,
+      "fear": 0.0,
+      "joy": 0.65,
+      "love": 0.0,
+      "neutral": 0.35000000000000003,
+      "sadness": 0.0,
+      "surprise": 0.0
+    },
+    "sentiment_score": 0.0,
+    "processed_text": "loaded with work..cant find time for myself no peace",
+    "ensemble": true,
+    "model_agreement": 0.5714285714285714,
+    "models_used": [
+      "linear_svc",
+      "logistic_regression",
+      "gradient_boosting",
+      "random_forest",
+      "naive_bayes",
+      "knn",
+      "decision_tree"
+    ]
+  },
+  {
+    "id": 7,
+    "text": "happy",
+    "user_id": "default",
+    "timestamp": "2025-06-30T11:43:54.412952",
+    "dominant_emotion": "joy",
+    "confidence": 0.55,
+    "emotions": {
+      "anger": 0.0,
+      "fear": 0.0,
+      "joy": 0.55,
+      "love": 0.0,
+      "neutral": 0.45,
+      "sadness": 0.0,
+      "surprise": 0.0
+    },
+    "sentiment_score": 0.8,
+    "processed_text": "happy",
+    "ensemble": true,
+    "model_agreement": 0.5714285714285714,
+    "models_used": [
+      "linear_svc",
+      "logistic_regression",
+      "gradient_boosting",
+      "random_forest",
+      "naive_bayes",
+      "knn",
+      "decision_tree"
+    ]
+  },
+  {
+    "id": 8,
+    "text": "cool day .. feeling fresh",
+    "user_id": "default",
+    "timestamp": "2025-06-30T11:44:03.505612",
+    "dominant_emotion": "joy",
+    "confidence": 0.9500000000000001,
+    "emotions": {
+      "anger": 0.0,
+      "fear": 0.0,
+      "joy": 0.9500000000000001,
+      "love": 0.0,
+      "neutral": 0.05,
+      "sadness": 0.0,
+      "surprise": 0.0
+    },
+    "sentiment_score": 0.32499999999999996,
+    "processed_text": "cool day .. feeling fresh",
+    "ensemble": true,
+    "model_agreement": 0.8571428571428571,
+    "models_used": [
+      "linear_svc",
+      "logistic_regression",
+      "gradient_boosting",
+      "random_forest",
+      "naive_bayes",
+      "knn",
+      "decision_tree"
+    ]
+  },
+  {
+    "id": 9,
+    "text": "tired dont wanna wake up",
+    "user_id": "default",
+    "timestamp": "2025-06-30T11:44:14.835282",
+    "dominant_emotion": "sadness",
+    "confidence": 0.55,
+    "emotions": {
+      "anger": 0.0,
+      "fear": 0.0,
+      "joy": 0.2,
+      "love": 0.0,
+      "neutral": 0.25,
+      "sadness": 0.55,
+      "surprise": 0.0
+    },
+    "sentiment_score": -0.4,
+    "processed_text": "tired dont wanna wake up",
+    "ensemble": true,
+    "model_agreement": 0.42857142857142855,
+    "models_used": [
+      "linear_svc",
+      "logistic_regression",
+      "gradient_boosting",
+      "random_forest",
+      "naive_bayes",
+      "knn",
+      "decision_tree"
+    ]
+  }
+]

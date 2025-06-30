@@ -9,7 +9,7 @@ interface Quote {
   author: string;
 }
 
-const Dashboard: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => {
+const Dashboard: React.FC = () => {
   const [summary, setSummary] = useState<AnalyticsSummary | null>(null);
   const [currentMood, setCurrentMood] = useState<JournalEntry | null>(null);
   const [loading, setLoading] = useState(false);
@@ -17,83 +17,52 @@ const Dashboard: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => 
   const [quote, setQuote] = useState<Quote | null>(null);
   const [quoteLoading, setQuoteLoading] = useState(true);
 
-  const fetchDailyQuote = useCallback(async () => {
+  // Map emotions to quote tags
+  const moodToTag: Record<string, string[]> = {
+    joy: ['happiness', 'inspiration', 'positive'],
+    sadness: ['hope', 'perseverance', 'overcome'],
+    anger: ['calm', 'forgiveness', 'peace'],
+    fear: ['courage', 'confidence', 'bravery'],
+    love: ['love', 'kindness', 'compassion'],
+    surprise: ['life', 'wisdom', 'change'],
+    neutral: ['life', 'wisdom', 'balance']
+  };
+
+  // Fetch a quote based on mood
+  const fetchMoodQuote = useCallback(async (mood: string) => {
+    setQuoteLoading(true);
     try {
-      // Try multiple quote APIs for better reliability
-      const apis = [
-        'https://api.quotable.io/random',
-        'https://zenquotes.io/api/random',
-        'https://api.goprogram.ai/inspiration'
-      ];
-
-      for (const api of apis) {
-        try {
-          const response = await fetch(api);
-          if (response.ok) {
-            const data = await response.json();
-            
-            if (api.includes('quotable.io')) {
-              setQuote({
-                text: data.content,
-                author: data.author
-              });
-              break;
-            } else if (api.includes('zenquotes.io')) {
-              setQuote({
-                text: data[0].q,
-                author: data[0].a
-              });
-              break;
-            } else if (api.includes('goprogram.ai')) {
-              setQuote({
-                text: data.quote,
-                author: data.author
-              });
-              break;
-            }
-          }
-        } catch (err) {
-          console.log(`Failed to fetch from ${api}, trying next...`);
-          continue;
-        }
-      }
-
-      // Fallback to a motivational quote if all APIs fail
-      if (!quote) {
-        const fallbackQuotes = [
-          { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
-          { text: "Life is 10% what happens to you and 90% how you react to it.", author: "Charles R. Swindoll" },
-          { text: "The greatest glory in living lies not in never falling, but in rising every time we fall.", author: "Nelson Mandela" },
-          { text: "Your emotions are the slaves to your thoughts, and you are the slave to your emotions.", author: "Elizabeth Gilbert" },
-          { text: "Happiness is not something ready made. It comes from your own actions.", author: "Dalai Lama" }
-        ];
-        const randomQuote = fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
-        setQuote(randomQuote);
+      const tags = moodToTag[mood] || ['inspiration'];
+      // Try Quotable API with tag
+      const response = await fetch(`https://api.quotable.io/random?tags=${tags.join(',')}`);
+      if (response.ok) {
+        const data = await response.json();
+        setQuote({ text: data.content, author: data.author });
+        return;
       }
     } catch (err) {
-      console.error('Error fetching quote:', err);
-      // Set a default quote if everything fails
-      setQuote({
-        text: "Every day is a new beginning. Take a deep breath and start again.",
-        author: "Anonymous"
-      });
-    } finally {
-      setQuoteLoading(false);
+      // Ignore and fallback
     }
-  }, [quote]);
+    // Fallback quote
+    setQuote({
+      text: "Every day is a new beginning. Take a deep breath and start again.",
+      author: "Anonymous"
+    });
+    setQuoteLoading(false);
+  }, []);
 
   const fetchAnalytics = useCallback(async () => {
     setLoading(true);
     setError('');
     
     try {
-      const response = await apiService.getAnalyticsSummary();
-      setSummary(response.data);
+      const summaryData = await apiService.getAnalyticsSummary();
+      setSummary(summaryData);
       
       // Get current mood (most recent entry)
-      const journalResponse = await apiService.getJournalEntries(1);
-      if (journalResponse.data && journalResponse.data.length > 0) {
-        setCurrentMood(journalResponse.data[0]);
+      const journalData = await apiService.getJournalEntries();
+      if (journalData && journalData.entries && journalData.entries.length > 0) {
+        setCurrentMood(journalData.entries[journalData.entries.length - 1]);
       }
     } catch (err) {
       // Don't show error for empty data, just set summary to null
@@ -104,10 +73,17 @@ const Dashboard: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => 
     }
   }, []);
 
+  // Fetch analytics and quote
   useEffect(() => {
     fetchAnalytics();
-    fetchDailyQuote();
-  }, [refreshTrigger, fetchAnalytics, fetchDailyQuote]);
+  }, [fetchAnalytics]);
+
+  // Fetch quote when current mood changes
+  useEffect(() => {
+    if (currentMood && currentMood.dominant_emotion) {
+      fetchMoodQuote(currentMood.dominant_emotion);
+    }
+  }, [currentMood, fetchMoodQuote]);
 
   const getEmotionColor = (emotion: string): string => {
     const colors: Record<string, string> = {
@@ -121,6 +97,20 @@ const Dashboard: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => 
       neutral: '#808080'
     };
     return colors[emotion] || '#8884d8';
+  };
+
+  // Custom label renderer for pie chart (outside the pie)
+  const renderCustomPieLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name, value }: any) => {
+    if (!value) return null;
+    const RADIAN = Math.PI / 180;
+    const radius = outerRadius + 24;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+    return (
+      <text x={x} y={y} fill="#333" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central" fontSize={14} fontWeight={500}>
+        {`${name.charAt(0).toUpperCase() + name.slice(1)} (${(percent * 100).toFixed(0)}%)`}
+      </text>
+    );
   };
 
   if (loading) {
@@ -180,6 +170,9 @@ const Dashboard: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => 
     color: getEmotionColor(emotion)
   }));
 
+  // Calculate total for legend
+  const total = pieData.reduce((sum, entry) => sum + entry.value, 0);
+
   return (
     <div className="dashboard-container">
       {/* Quote Section */}
@@ -216,14 +209,14 @@ const Dashboard: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => 
           <h2>Current Mood</h2>
           <div className="mood-card">
             <div className="mood-emoji">
-              {currentMood.dominant_emotion === 'joy' && '😊'}
+              {currentMood.dominant_emotion === 'joy' && '😄'}
               {currentMood.dominant_emotion === 'sadness' && '😢'}
               {currentMood.dominant_emotion === 'anger' && '😠'}
               {currentMood.dominant_emotion === 'fear' && '😨'}
               {currentMood.dominant_emotion === 'surprise' && '😲'}
               {currentMood.dominant_emotion === 'disgust' && '🤢'}
               {currentMood.dominant_emotion === 'love' && '❤️'}
-              {currentMood.dominant_emotion === 'neutral' && '😐'}
+              {currentMood.dominant_emotion === 'neutral' && '🙂'}
             </div>
             <div className="mood-details">
               <h3>{currentMood.dominant_emotion.charAt(0).toUpperCase() + currentMood.dominant_emotion.slice(1)}</h3>
@@ -246,51 +239,61 @@ const Dashboard: React.FC<{ refreshTrigger: number }> = ({ refreshTrigger }) => 
         </div>
         <div className="stat-card">
           <h3>Average Confidence</h3>
-          <p>{(summary.average_confidence * 100).toFixed(1)}%</p>
+          <div className="dashboard-stat">
+            <div className="dashboard-stat-value">{summary.average_confidence.toFixed(1)}%</div>
+          </div>
         </div>
       </div>
 
       {/* Charts */}
-      <div className="charts-container">
-        <div className="chart-section">
+      <div className="charts-landscape-row" style={{ display: 'flex', flexDirection: 'row', gap: 32, flexWrap: 'wrap', justifyContent: 'center' }}>
+        <div className="emotion-distribution-section" style={{ flex: 1, minWidth: 320, maxWidth: 400 }}>
           <h2>Emotion Distribution</h2>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={250}>
             <PieChart>
               <Pie
                 data={pieData}
+                dataKey="value"
+                nameKey="name"
                 cx="50%"
                 cy="50%"
-                labelLine={false}
-                label={({ name, percent }) => `${name} ${percent ? (percent * 100).toFixed(0) : 0}%`}
                 outerRadius={80}
                 fill="#8884d8"
-                dataKey="value"
+                label={renderCustomPieLabel}
               >
                 {pieData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
-              <Tooltip />
+              <Tooltip formatter={(value: any, name: any) => [`${value}`, `${name}`]} />
             </PieChart>
           </ResponsiveContainer>
         </div>
-
-        <div className="chart-section">
+        <div className="emotion-counts-section" style={{ flex: 1, minWidth: 320, maxWidth: 500 }}>
           <h2>Emotion Counts</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={barData}>
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={barData} margin={{ top: 16, right: 16, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="emotion" />
-              <YAxis />
+              <XAxis dataKey="emotion" tick={{ fontSize: 13 }} />
+              <YAxis allowDecimals={false} tick={{ fontSize: 13 }} />
               <Tooltip />
               <Bar dataKey="count">
                 {barData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
+                  <Cell key={`bar-cell-${index}`} fill={entry.color} />
                 ))}
               </Bar>
             </BarChart>
           </ResponsiveContainer>
         </div>
+      </div>
+      {/* Custom Legend below both charts */}
+      <div className="custom-pie-legend" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', marginTop: 18 }}>
+        {pieData.map((entry, idx) => (
+          <div key={entry.name} style={{ display: 'flex', alignItems: 'center', margin: '0 12px 6px 0', fontSize: 14 }}>
+            <span style={{ display: 'inline-block', width: 14, height: 14, background: entry.color, borderRadius: 3, marginRight: 6 }}></span>
+            <span>{entry.name.charAt(0).toUpperCase() + entry.name.slice(1)} ({((entry.value / total) * 100).toFixed(0)}%)</span>
+          </div>
+        ))}
       </div>
     </div>
   );

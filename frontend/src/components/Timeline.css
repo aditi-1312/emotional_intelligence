@@ -116,6 +116,8 @@
   gap: 1rem;
   max-height: 400px;
   overflow-y: auto;
+  margin: 0;
+  padding: 0;
 }
 
 .timeline-entry {

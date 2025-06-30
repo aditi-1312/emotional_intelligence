@@ -1,166 +1,136 @@
-#!/usr/bin/env python3
-"""
-Enhanced Emotional Intelligence Model Training Script
-This script trains multiple models and provides comprehensive analysis
-"""
-
 import pandas as pd
 import numpy as np
+import re
 import os
-import sys
-import time
-import warnings
 from datetime import datetime
-warnings.filterwarnings('ignore')
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.svm import LinearSVC
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import classification_report, accuracy_score
+import joblib
 
-# Add src to path
-sys.path.append('src')
+# Generate timestamp for new model files
+TIMESTAMP = datetime.now().strftime('%Y%m%d_%H%M%S')
 
-from src.data_processor import AdvancedTextProcessor, FeatureExtractor
-from src.models import EmotionClassifier
-from src.utils import VisualizationUtils, DataUtils, ModelUtils, ExportUtils
-import config
+# Paths
+DATA_PATH = os.path.join('..', 'data_and_models', 'data', 'emotion_dataset.csv')
+MODELS_DIR = os.path.join('..', 'data_and_models', 'models')
 
-def load_or_generate_data():
-    """Load existing dataset or generate sample data"""
-    data_path = config.DATA_CONFIG['dataset_path']
-    
-    if os.path.exists(data_path):
-        print(f"Loading existing dataset from {data_path}")
-        data = pd.read_csv(data_path)
-    else:
-        print("No existing dataset found. Generating sample data...")
-        data = DataUtils.generate_sample_data(n_samples=config.DATA_CONFIG['sample_size'])
-        
-        # Create data directory if it doesn't exist
-        os.makedirs(os.path.dirname(data_path), exist_ok=True)
-        
-        # Save dataset
-        data.to_csv(data_path, index=False)
-        print(f"Sample data saved to {data_path}")
-    
-    print(f"Dataset shape: {data.shape}")
-    print(f"Emotions: {data['label'].unique()}")
-    
-    return data
+# Model filenames with new timestamp
+MODEL_FILES = {
+    'vectorizer': f'vectorizer_{TIMESTAMP}.pkl',
+    'decision_tree': f'decision_tree_{TIMESTAMP}.pkl',
+    'gradient_boosting': f'gradient_boosting_{TIMESTAMP}.pkl',
+    'knn': f'knn_{TIMESTAMP}.pkl',
+    'linear_svc': f'linear_svc_{TIMESTAMP}.pkl',
+    'logistic_regression': f'logistic_regression_{TIMESTAMP}.pkl',
+    'naive_bayes': f'naive_bayes_{TIMESTAMP}.pkl',
+    'random_forest': f'random_forest_{TIMESTAMP}.pkl'
+}
+
+# Clean text function
+def clean_text(text):
+    text = str(text).lower()
+    text = re.sub(r'[^a-z0-9\s]', '', text)
+    text = re.sub(r'\s+', ' ', text)
+    return text.strip()
 
 def main():
-    """Main training function"""
-    print("🧠 Enhanced Emotional Intelligence Model Training")
-    print("=" * 60)
-    print(f"Training started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print()
+    print('Loading new Hugging Face emotion dataset...')
+    df = pd.read_csv(DATA_PATH)
+    if 'text' not in df.columns or 'label' not in df.columns:
+        raise ValueError('Dataset must have "text" and "label" columns')
     
-    # Step 1: Load or generate data
-    print("📊 Step 1: Loading Data...")
-    data = load_or_generate_data()
-    print()
+    print(f"Original dataset shape: {df.shape}")
+    print(f"Emotion distribution:")
+    print(df['label'].value_counts())
     
-    # Step 2: Initialize classifier
-    print("🔧 Step 2: Advanced Text Preprocessing...")
-    classifier = EmotionClassifier(models_dir=str(config.MODELS_DIR))
-    
-    # Step 3: Prepare data
-    print("🔍 Step 3: Feature Extraction...")
-    X_features, y, processed_data = classifier.prepare_data(
-        data, 
-        text_column=config.DATA_CONFIG['text_column'],
-        label_column=config.DATA_CONFIG['label_column']
+    # Clean text
+    df['text'] = df['text'].astype(str).apply(clean_text)
+    df = df[df['text'].str.strip() != '']
+    print(f"Data shape after cleaning: {df.shape}")
+
+    X = df['text']
+    y = df['label']
+
+    print('Vectorizing text...')
+    vectorizer = TfidfVectorizer(
+        stop_words='english', 
+        max_features=15000, 
+        ngram_range=(1, 2),
+        min_df=2,
+        max_df=0.95
     )
-    print()
-    
-    # Step 4: Train models
-    print("🤖 Step 4: Training Models...")
-    results = classifier.train_models(
-        X_features, 
-        y,
-        test_size=config.DATA_CONFIG['test_size'],
-        random_state=config.DATA_CONFIG['random_state']
+    X_vect = vectorizer.fit_transform(X)
+    joblib.dump(vectorizer, os.path.join(MODELS_DIR, MODEL_FILES['vectorizer']))
+    print('Vectorizer saved.')
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X_vect, y, test_size=0.2, random_state=42, stratify=y
     )
-    print()
+
+    print(f"Training set size: {X_train.shape[0]}")
+    print(f"Test set size: {X_test.shape[0]}")
+
+    models = {
+        'logistic_regression': LogisticRegression(max_iter=2000, solver='liblinear', C=1.0),
+        'random_forest': RandomForestClassifier(n_estimators=200, random_state=42, max_depth=20),
+        'gradient_boosting': GradientBoostingClassifier(n_estimators=200, random_state=42, max_depth=6),
+        'linear_svc': LinearSVC(max_iter=2000, random_state=42, C=1.0),
+        'naive_bayes': MultinomialNB(alpha=0.1),
+        'knn': KNeighborsClassifier(n_neighbors=7, weights='distance'),
+        'decision_tree': DecisionTreeClassifier(random_state=42, max_depth=15)
+    }
+
+    best_model = None
+    best_accuracy = 0
+    results = {}
+
+    for name, model in models.items():
+        print(f'\nTraining {name}...')
+        model.fit(X_train, y_train)
+        preds = model.predict(X_test)
+        acc = accuracy_score(y_test, preds)
+        results[name] = acc
+        
+        print(f"{name} accuracy: {acc:.4f}")
+        print(classification_report(y_test, preds))
+        
+        # Save model
+        joblib.dump(model, os.path.join(MODELS_DIR, MODEL_FILES[name]))
+        print(f"{name} saved.")
+        
+        if acc > best_accuracy:
+            best_accuracy = acc
+            best_model = name
+
+    print(f'\n=== TRAINING COMPLETED ===')
+    print(f'Best model: {best_model} (accuracy: {best_accuracy:.4f})')
+    print(f'All models saved with timestamp: {TIMESTAMP}')
     
-    # Step 5: Save models
-    print("💾 Step 5: Saving Models...")
-    classifier.save_models(results, classifier.vectorizer)
-    print()
-    
-    # Step 6: Generate reports
-    print("📈 Step 6: Generating Reports...")
-    
-    # Create results summary
-    results_summary = []
-    for model_name, result in results.items():
-        if result['model'] is not None:
-            results_summary.append({
-                'Model': model_name,
-                'Accuracy': result['accuracy'],
-                'Status': 'Success'
-            })
-        else:
-            results_summary.append({
-                'Model': model_name,
-                'Accuracy': 0.0,
-                'Status': 'Failed'
-            })
-    
-    results_df = pd.DataFrame(results_summary)
-    
-    # Save results
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    results_path = os.path.join(config.OUTPUT_DIR, f"training_results_{timestamp}.csv")
-    os.makedirs(config.OUTPUT_DIR, exist_ok=True)
-    results_df.to_csv(results_path, index=False)
-    
-    # Save detailed results
-    detailed_results = {
-        'best_model': classifier.best_model,
-        'best_accuracy': classifier.best_score,
-        'training_timestamp': timestamp,
-        'dataset_size': len(data),
-        'feature_count': X_features.shape[1] if hasattr(X_features, 'shape') else 0,
-        'class_count': len(y.unique())
+    # Save model info
+    model_info = {
+        'timestamp': TIMESTAMP,
+        'best_model': best_model,
+        'best_accuracy': best_accuracy,
+        'results': results,
+        'dataset_size': len(df),
+        'emotion_distribution': df['label'].value_counts().to_dict()
     }
     
-    detailed_path = os.path.join(config.OUTPUT_DIR, f"detailed_results_{timestamp}.json")
-    ExportUtils.export_results_to_json(detailed_results, detailed_path)
+    model_info_path = os.path.join(MODELS_DIR, f'best_model_info_{TIMESTAMP}.pkl')
+    joblib.dump(model_info, model_info_path)
+    print(f'Model info saved to: {model_info_path}')
     
-    print(f"Results saved to {results_path}")
-    print(f"Detailed results saved to {detailed_path}")
-    print()
-    
-    # Step 7: Display summary
-    print("📋 TRAINING SUMMARY")
-    print("=" * 40)
-    print(f"Best Model: {classifier.best_model}")
-    print(f"Best Accuracy: {classifier.best_score:.4f}")
-    print(f"Total Models Trained: {len([r for r in results.values() if r['model'] is not None])}")
-    print(f"Dataset Size: {len(data)} samples")
-    print(f"Feature Count: {X_features.shape[1]} features")
-    print(f"Classes: {len(y.unique())} emotions")
-    print()
-    
-    # Display model performance
-    print("🏆 MODEL PERFORMANCE")
-    print("=" * 40)
-    for _, row in results_df.iterrows():
-        status_icon = "✅" if row['Status'] == 'Success' else "❌"
-        print(f"{status_icon} {row['Model']}: {row['Accuracy']:.4f}")
-    print()
-    
-    print("🎉 Training completed successfully!")
-    print("\n🚀 Next steps:")
-    print("1. Start web interface: streamlit run app.py")
-    print("2. Start API server: python api.py")
-    print("3. Test the system: python run_demo.py")
-    
-    return True
+    # Print summary
+    print(f'\nModel Performance Summary:')
+    for name, acc in sorted(results.items(), key=lambda x: x[1], reverse=True):
+        print(f'  {name}: {acc:.4f}')
 
-if __name__ == "__main__":
-    try:
-        success = main()
-        sys.exit(0 if success else 1)
-    except Exception as e:
-        print(f"❌ Training failed: {e}")
-        import traceback
-        traceback.print_exc()
-        sys.exit(1) 
+if __name__ == '__main__':
+    main() 

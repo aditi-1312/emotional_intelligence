@@ -32,9 +32,11 @@ export interface TimelineEntry {
   id: number;
   text: string;
   dominant_emotion: string;
+  emotion?: string;
   confidence: number;
   timestamp: string;
   date: string;
+  sentiment_score?: number;
 }
 
 export interface AIInsights {
@@ -50,38 +52,47 @@ export interface Suggestions {
   categories: SuggestionCategory[];
 }
 
+// Helper function to extract data from backend response
+const extractData = (response: any) => {
+  if (response.data && response.data.success !== undefined) {
+    // Backend wraps data in { success: true, data: ... } or { success: true, summary: ... }
+    return response.data.summary || response.data.entries || response.data.timeline || response.data.analysis || response.data;
+  }
+  return response.data;
+};
+
 export const apiService = {
   // Health check
   health: () => api.get('/health'),
 
   // Journal entries
   addJournalEntry: (text: string) =>
-    api.post<JournalEntry>('/journal', { text }),
+    api.post('/journal', { text }).then(extractData),
 
-  getJournalEntries: (limit: number = 10) =>
-    api.get<JournalEntry[]>(`/journal?limit=${limit}`),
-
-  clearJournalEntries: () =>
-    api.delete<{message: string, deleted_count: number}>('/journal/clear'),
+  getJournalEntries: () =>
+    api.get<{success: boolean, entries: JournalEntry[], count: number}>('/journal').then(response => {
+      // Return the response directly so we can access both entries and count
+      return response.data;
+    }),
 
   // Analytics
   getAnalyticsSummary: () =>
-    api.get<AnalyticsSummary>('/analytics/summary'),
+    api.get<AnalyticsSummary>('/analytics/summary').then(extractData),
 
   getTimeline: (limit: number = 30) =>
-    api.get<TimelineEntry[]>(`/analytics/timeline?limit=${limit}`),
+    api.get<TimelineEntry[]>(`/analytics/timeline?limit=${limit}`).then(extractData),
 
   // AI Insights
   getAIInsights: () =>
-    api.post<string>('/ai/insights', {}),
+    api.get('/ai/insights').then(extractData),
 
   // Suggestions
   getSuggestions: () =>
-    api.get<Suggestions>('/suggestions'),
+    api.get('/suggestions').then(res => res.data.suggestions),
 
   // Text analysis
   analyzeText: (text: string) =>
-    api.post<any>('/analyze', { text }),
+    api.post<any>('/analyze', { text }).then(extractData),
 
   // Authentication
   getCurrentUser: () => api.get('/auth/user'),

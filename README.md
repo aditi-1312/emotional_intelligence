@@ -1,252 +1,220 @@
-# 🧠 Emotional Intelligence Mood Tracker
+# 🧠 Emotional Intelligence Analyzer
 
-A comprehensive web application for tracking emotional well-being using AI-powered emotion analysis and personalized insights.
+A comprehensive web application for analyzing emotional intelligence using AI-powered emotion analysis and interactive visualizations.
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
-![React](https://img.shields.io/badge/React-18.0+-blue.svg)
-![TypeScript](https://img.shields.io/badge/TypeScript-4.0+-blue.svg)
-![Flask](https://img.shields.io/badge/Flask-2.0+-green.svg)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.25+-green.svg)
+![Scikit-learn](https://img.shields.io/badge/Scikit--learn-1.3+-orange.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 ## 🌟 Features
 
-### 📝 **Journal Entry System**
-- Write daily mood entries with natural language
-- AI-powered emotion detection from text
-- Confidence scoring for emotion analysis
-- Timestamp tracking for emotional journey
+### 📝 **Text Analysis**
+- Analyze emotions from natural language text
+- AI-powered emotion detection with confidence scoring
+- Real-time emotion analysis with multiple ML models
+- Support for 7 emotion categories: joy, sadness, anger, fear, surprise, love, neutral
 
-### 📊 **Analytics Dashboard**
-- Visual representation of mood trends
-- Emotion distribution charts
-- Statistical analysis of emotional patterns
-- Real-time data aggregation
+### 📊 **Interactive Dashboard**
+- Real-time emotion analysis results
+- Interactive visualizations with Plotly
+- Emotion distribution charts and radar plots
+- Sentiment analysis with gauge charts
 
-### 📈 **Timeline View**
-- Chronological view of emotional journey
-- Filter and search through entries
-- Visual timeline with emotion indicators
-- Historical mood tracking
+### 📈 **Model Training Interface**
+- Train multiple ML models (Logistic Regression, Random Forest, SVM, etc.)
+- Model performance comparison
+- Hyperparameter tuning capabilities
+- Model evaluation and selection
 
-### 📅 **Mood Calendar**
-- Calendar-based mood tracking
-- Monthly and weekly views
-- Color-coded emotion indicators
-- Quick entry creation
+### 📋 **Data Explorer**
+- Sample dataset exploration
+- Emotion distribution analysis
+- Text length statistics
+- Interactive data visualizations
 
-### 🤖 **AI Insights**
-- OpenAI GPT-3.5 powered insights
-- Personalized emotional intelligence advice
-- Context-aware suggestions
-- Rule-based fallback system
+### 🤖 **Advanced ML Models**
+- Multiple emotion classification models
+- Feature extraction with TF-IDF
+- Text preprocessing and cleaning
+- Model performance metrics
 
-### 🔐 **Secure Authentication**
-- Google OAuth 2.0 integration
-- Secure user session management
-- Data isolation per user
-- Demo login for testing
-
-### 🗂️ **Data Management**
-- Refresh/clear functionality
-- Export capabilities
-- Data backup and restore
-- User data privacy controls
+### 🎨 **Beautiful UI**
+- Modern Streamlit interface
+- Responsive design
+- Interactive charts and graphs
+- Custom CSS styling
 
 ## 🛠️ Technology Stack
 
-### **Backend**
-- **Python Flask** - Web framework
-- **SQLite** - Database
-- **Flask-Login** - Authentication
-- **OAuthlib** - Google OAuth integration
-- **OpenAI API** - AI insights
+### **Backend & ML**
+- **Python 3.8+** - Core programming language
+- **Streamlit** - Web application framework
+- **Scikit-learn** - Machine learning library
 - **Pandas/NumPy** - Data processing
+- **NLTK/TextBlob** - Natural language processing
+- **Plotly** - Interactive visualizations
+- **SQLite** - Local data storage
 
-### **Frontend**
-- **React 18** - UI framework
-- **TypeScript** - Type safety
-- **Axios** - HTTP client
-- **React Router** - Navigation
-- **CSS3** - Styling
+### **Machine Learning**
+- **Multiple ML Models** - Logistic Regression, Random Forest, SVM, Naive Bayes
+- **Feature Extraction** - TF-IDF, Count Vectorization
+- **Text Processing** - Lemmatization, stop word removal
+- **Model Evaluation** - Cross-validation, performance metrics
 
 ### **DevOps**
 - **Docker** - Containerization
 - **Git** - Version control
 - **Python venv** - Environment management
-- **npm** - Package management
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 - Python 3.8+
-- Node.js 16+
-- npm or yarn
-- Google OAuth credentials
+- pip package manager
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/emotional-intelligence-mood-tracker.git
-cd emotional-intelligence-mood-tracker
+git clone https://github.com/yourusername/emotional-intelligence-analyzer.git
+cd emotional-intelligence-analyzer
 ```
 
 ### 2. Backend Setup
 ```bash
+cd backend
+
 # Create virtual environment
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
-
-# Set up environment variables
-cp config.env.example config.env
-# Edit config.env with your credentials
 ```
 
-### 3. Frontend Setup
+### 3. Train Models (Optional)
 ```bash
-cd frontend
-npm install
+# Train the emotion analysis models
+python train_models.py
 ```
 
-### 4. Configure Google OAuth
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select existing one
-3. Enable Google+ API
-4. Create OAuth 2.0 credentials
-5. Add authorized redirect URIs:
-   - `http://localhost:5001/auth/callback`
-6. Update `config.env` with your credentials
-
-### 5. Run the Application
+### 4. Run the Application
 ```bash
-# Terminal 1: Start backend
-cd backend
-python api.py
+# Method 1: Using the launch script
+python run_app.py
 
-# Terminal 2: Start frontend
-cd frontend
-npm start
+# Method 2: Direct Streamlit command
+streamlit run app.py
+
+# Method 3: With custom port
+streamlit run app.py --server.port 8501 --server.address 0.0.0.0
 ```
 
-### 6. Access the Application
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:5001
-- Health Check: http://localhost:5001/health
+### 5. Access the Application
+- Web Interface: http://localhost:8501
+- The application will automatically open in your default browser
 
 ## 📁 Project Structure
 
 ```
-emotional-intelligence-mood-tracker/
-├── backend/                 # Flask backend
-│   ├── api.py              # Main Flask application
+emotional-intelligence-analyzer/
+├── backend/                 # Main application directory
+│   ├── app.py              # Streamlit application
+│   ├── run_app.py          # Launch script
 │   ├── config.py           # Configuration management
-│   ├── models.py           # Database models
+│   ├── models.py           # Data models and database
+│   ├── train_models.py     # Model training script
+│   ├── requirements.txt    # Python dependencies
+│   ├── Procfile           # Deployment configuration
 │   └── src/
 │       ├── data_processor.py  # Text processing
-│       ├── models.py          # AI models
+│       ├── models.py          # ML models
 │       └── utils.py           # Utility functions
-├── frontend/               # React frontend
-│   ├── src/
-│   │   ├── components/     # React components
-│   │   ├── services/       # API services
-│   │   └── App.tsx         # Main application
-│   ├── package.json
-│   └── tsconfig.json
-├── data_and_models/        # Data storage and ML models
+├── data_and_models/        # Data storage and trained models
 ├── docs/                   # Documentation
 ├── scripts/                # Utility scripts
-├── tests/                  # Test files
-├── config.env.example      # Environment template
-├── requirements.txt        # Python dependencies
-├── docker-compose.yml      # Docker configuration
+├── temp_cleanup/           # Legacy files
+├── frontend/               # React frontend (legacy)
 └── README.md              # This file
 ```
 
 ## 🔧 Configuration
 
 ### Environment Variables
-Create a `config.env` file with the following variables:
+The application uses default configurations, but you can customize:
 
-```env
-# Google OAuth
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
+```bash
+# Set custom port
+export PORT=8501
 
-# Flask
-FLASK_SECRET_KEY=your_secret_key
+# Enable debug mode
+export DEBUG=True
 
-# OpenAI (Optional)
-OPENAI_API_KEY=your_openai_api_key
-
-# Database
-DATABASE_URL=sqlite:///instance/emotional_intelligence.db
-
-# CORS
-CORS_ORIGINS=http://localhost:3000
+# Set log level
+export LOG_LEVEL=INFO
 ```
+
+### Model Configuration
+Edit `backend/config.py` to customize:
+- Model hyperparameters
+- Text processing settings
+- Feature extraction parameters
+- Performance thresholds
 
 ## 🧪 Testing
 
-### Backend Tests
+### Run System Tests
 ```bash
 cd backend
-python -m pytest tests/
+python ../scripts/test_system.py
 ```
 
-### Frontend Tests
+### Run Demo
 ```bash
-cd frontend
-npm test
+cd backend
+python ../scripts/run_demo.py
 ```
 
-### API Testing
+## 🚀 Deployment
+
+### Local Development
 ```bash
-# Test health endpoint
-curl http://localhost:5001/health
-
-# Test OAuth flow
-curl -I http://localhost:5001/auth/login
+cd backend
+streamlit run app.py
 ```
 
-## 📊 API Endpoints
-
-### Authentication
-- `GET /auth/login` - Initiate Google OAuth
-- `GET /auth/callback` - OAuth callback handler
-- `GET /auth/user` - Get current user
-- `GET /auth/logout` - Logout user
-- `GET /auth/demo` - Demo login
-
-### Journal Entries
-- `POST /journal` - Add new journal entry
-- `GET /journal` - Get journal entries
-- `DELETE /journal/clear` - Clear all entries
-
-### Analytics
-- `GET /analytics/summary` - Get analytics summary
-- `GET /analytics/timeline` - Get timeline data
-
-### AI Insights
-- `POST /ai/insights` - Get AI-powered insights
-- `GET /suggestions` - Get wellness suggestions
-
-## 🐳 Docker Deployment
-
-### Using Docker Compose
+### Production Deployment
 ```bash
-docker-compose up -d
+# Using the Procfile (for Heroku, Railway, etc.)
+cd backend
+# The Procfile will automatically run: streamlit run app.py --server.port $PORT --server.address 0.0.0.0
 ```
 
-### Manual Docker Build
+### Docker Deployment
 ```bash
-# Build backend
-docker build -t emotional-intelligence-backend .
-
-# Build frontend
-cd frontend
-docker build -t emotional-intelligence-frontend .
+# Build and run with Docker
+docker build -t emotional-intelligence .
+docker run -p 8501:8501 emotional-intelligence
 ```
+
+## 📊 Features in Detail
+
+### Text Analysis
+- **Real-time Processing**: Analyze text as you type
+- **Multiple Emotions**: Detect joy, sadness, anger, fear, surprise, love, neutral
+- **Confidence Scoring**: Get confidence levels for each emotion
+- **Sentiment Analysis**: Overall sentiment scoring
+
+### Dashboard
+- **Overview Metrics**: Total analyses, accuracy, common emotions
+- **Quick Analysis**: Instant text analysis with results
+- **Activity Tracking**: Daily analysis trends
+- **Performance Monitoring**: Model performance metrics
+
+### Model Training
+- **Multiple Algorithms**: Logistic Regression, Random Forest, SVM, Naive Bayes
+- **Hyperparameter Tuning**: Optimized model parameters
+- **Performance Comparison**: Side-by-side model evaluation
+- **Model Persistence**: Save and load trained models
 
 ## 🤝 Contributing
 
@@ -256,40 +224,14 @@ docker build -t emotional-intelligence-frontend .
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-### Development Guidelines
-- Follow PEP 8 for Python code
-- Use TypeScript for frontend components
-- Write tests for new features
-- Update documentation as needed
-
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-- OpenAI for GPT-3.5 API
-- Google for OAuth 2.0
-- React and Flask communities
-- Contributors and testers
-
-## 📞 Support
-
-- **Issues**: [GitHub Issues](https://github.com/yourusername/emotional-intelligence-mood-tracker/issues)
-- **Documentation**: [Wiki](https://github.com/yourusername/emotional-intelligence-mood-tracker/wiki)
-- **Email**: aditigarg1312@gmail.com
-
-## 🗺️ Roadmap
-
-- [ ] Mobile app development
-- [ ] Advanced analytics and ML
-- [ ] Social features and sharing
-- [ ] Export/import functionality
-- [ ] Multi-language support
-- [ ] Real-time notifications
-- [ ] Integration with health apps
-
----
-
-**Made with ❤️ for better emotional well-being**
+- Streamlit for the amazing web framework
+- Scikit-learn for machine learning capabilities
+- Plotly for interactive visualizations
+- The open-source community for inspiration and tools
 
